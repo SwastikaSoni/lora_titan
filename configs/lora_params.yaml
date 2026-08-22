@@ -1,0 +1,44 @@
+# LoRa radio parameter presets.
+#
+# Loaded via LoRaParams.from_preset(path, name). Only fields that
+# affect time-on-air live here — TX power, frequency, and region
+# policy belong on the radio / transport / duty config, not here.
+#
+# Trade-off cheat sheet (per Semtech AN1200.22):
+#   SF up   -> range up,   throughput down, airtime up
+#   BW up   -> throughput up, sensitivity down, airtime down
+#   CR up   -> robustness up, throughput down, airtime up
+#
+# LDRO auto-rule: on when T_sym > 16 ms (BW=125 & SF>=11, or BW=250 & SF=12).
+
+presets:
+
+  # Manuel et al. §III-B / Algorithm 2. High throughput, medium range.
+  # T_sym = 2.048 ms, LDRO auto=off.
+  paper_default:
+    spreading_factor: 10
+    bandwidth_hz: 500000
+    coding_rate: "4/5"
+    preamble_symbols: 8
+    explicit_header: true
+    crc_on: true
+
+  # Long-range preset for the mesh routing bake-off (Weeks 3-4).
+  # T_sym = 32.768 ms, LDRO auto=on. Payload of ~50 B takes ~3.5 s.
+  long_range:
+    spreading_factor: 12
+    bandwidth_hz: 125000
+    coding_rate: "4/8"
+    preamble_symbols: 8
+    explicit_header: true
+    crc_on: true
+
+  # Balanced preset — common LoRaWAN uplink defaults. Kept for
+  # comparison plots in the bake-off.
+  balanced:
+    spreading_factor: 7
+    bandwidth_hz: 125000
+    coding_rate: "4/5"
+    preamble_symbols: 8
+    explicit_header: true
+    crc_on: true

@@ -1,0 +1,10 @@
+# Runtime deps for Tier-1 (SimPy) work. Pinned loosely — tighten in
+# Week 11 for the evaluation batch, and freeze exact hashes into
+# docs/environment/receipt_wN.md at each milestone.
+#
+# All four are pure-Python or have wheels on manylinux/aarch64/macOS.
+
+simpy>=4.0.1,<5          # discrete-event sim — Tier-1 virtual LoRa radio
+msgpack>=1.0.7,<2        # binary payload encoding inside LoRa frame
+numpy>=1.24,<3           # log-normal shadowing, later signal-quality math
+PyYAML>=6.0              # config loading (channel.yaml, lora_params.yaml)

@@ -1,0 +1,99 @@
+# Workspace-level dev-tool config.
+#
+# This file intentionally has no [project] table and no [build-system].
+# We are NOT packaging titan_communication for PyPI. It is a ROS 2
+# ament_python package eventually; setuptools + package.xml get added in
+# Week 5 when we start wrapping nodes in rclpy. For now, `pytest` finds
+# the code via `pythonpath` below, and `mypy` finds it via `mypy_path`.
+#
+# Runtime deps live in requirements.txt.
+# Dev deps live in requirements-dev.txt.
+
+# ---------------------------------------------------------------------------
+# pytest
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["src/titan_communication/tests"]
+# src-layout: put the package's parent on sys.path so `import
+# titan_communication` works from tests without installing anything.
+pythonpath = ["src/titan_communication"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-ra",                # short summary for all except passes
+    "--strict-markers",   # unknown @pytest.mark.* -> error
+    "--strict-config",    # unknown config keys -> error
+    "--tb=short",
+]
+# Treat warnings as errors so we notice deprecations early. Add
+# per-warning ignores here as they come up.
+filterwarnings = [
+    "error",
+]
+
+# ---------------------------------------------------------------------------
+# mypy
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+no_implicit_reexport = true
+mypy_path = "src/titan_communication"
+packages = ["titan_communication"]
+
+# Third-party overrides go here as soon as we start importing them from
+# checked code. Kept empty for now to avoid `warn_unused_configs` noise.
+# Expected additions in step 2 (airtime uses simpy) and step 6 (frame
+# uses msgpack):
+[[tool.mypy.overrides]]
+module = ["msgpack.*"]
+ignore_missing_imports = true
+
+# ---------------------------------------------------------------------------
+# ruff (lint + format)
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = [
+    ".venv",
+    "build",
+    "install",
+    "log",
+    "**/test_copyright.py",   # ros2 pkg create boilerplate
+    "**/test_flake8.py",      # ros2 pkg create boilerplate
+    "**/test_mypy.py",        # ros2 pkg create boilerplate
+    "**/test_pep257.py",      # ros2 pkg create boilerplate
+    "**/test_xmllint.py",     # ros2 pkg create boilerplate
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific
+]
+ignore = [
+    "E501",   # line too long — handled by formatter
+    "RUF001", # ambiguous unicode in identifiers — false alarm, we use plain ASCII in names
+    "RUF002", # ambiguous unicode in docstrings — we use en-dashes deliberately in prose
+    "RUF003", # ambiguous unicode in comments — same reason
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Test files: relax name-lints (test class names, fixture names).
+"**/tests/**" = ["N802", "N803", "N806"]
+# __init__.py files often re-export.
+"**/__init__.py" = ["F401"]

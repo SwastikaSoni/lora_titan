@@ -1,0 +1,12 @@
+# Dev deps — testing, typing, lint. Includes runtime deps transitively.
+
+-r requirements.txt
+
+pytest>=7.4,<9
+pytest-cov>=4.1
+pytest-xdist>=3.5        # parallel test runs; useful for N=20 seed sweeps
+
+mypy>=1.7,<2
+types-PyYAML             # PyYAML has no inline type hints
+
+ruff>=0.1.6              # lint + format, replaces flake8/isort/black

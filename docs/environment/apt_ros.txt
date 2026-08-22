@@ -1,0 +1,374 @@
+ii  ros-lyrical-action-msgs                            2.4.5-1resolute.20260605.190918            amd64        Messages and service definitions common among all ROS actions.
+ii  ros-lyrical-action-tutorials-cpp                   0.37.8-3resolute.20260606.024220           amd64        C++ action tutorial cpp code
+ii  ros-lyrical-action-tutorials-py                    0.37.8-3resolute.20260606.024806           amd64        Python action tutorial code
+ii  ros-lyrical-actuator-msgs                          0.0.1-5resolute.20260606.004919            amd64        ROS 2 message interface for Actuators.
+ii  ros-lyrical-ament-cmake                            2.8.7-3resolute.20260430.012353            amd64        The entry point package for the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-auto                       2.8.7-3resolute.20260430.012538            amd64        The auto-magic functions for ease to use of the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-copyright                  0.20.6-1resolute.20260516.052027           amd64        The CMake API for ament_copyright to check every source file contains copyright reference.
+ii  ros-lyrical-ament-cmake-core                       2.8.7-3resolute.20260430.010548            amd64        The core of the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-cppcheck                   0.20.6-1resolute.20260516.051659           amd64        The CMake API for ament_cppcheck to perform static code analysis on C/C++ code using Cppcheck.
+ii  ros-lyrical-ament-cmake-cpplint                    0.20.6-1resolute.20260516.051700           amd64        The CMake API for ament_cpplint to lint C / C++ code using cpplint.
+ii  ros-lyrical-ament-cmake-export-definitions         2.8.7-3resolute.20260430.012140            amd64        The ability to export definitions to downstream packages in the ament buildsystem.
+ii  ros-lyrical-ament-cmake-export-dependencies        2.8.7-3resolute.20260430.012223            amd64        The ability to export dependencies to downstream packages in the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-export-include-directories 2.8.7-3resolute.20260430.012143            amd64        The ability to export include directories to downstream packages in the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-export-libraries           2.8.7-3resolute.20260430.012046            amd64        The ability to export libraries to downstream packages in the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-export-link-flags          2.8.7-3resolute.20260430.012144            amd64        The ability to export link flags to downstream packages in the ament buildsystem.
+ii  ros-lyrical-ament-cmake-export-targets             2.8.7-3resolute.20260430.012142            amd64        The ability to export targets to downstream packages in the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-flake8                     0.20.6-1resolute.20260516.051734           amd64        The CMake API for ament_flake8 to check code syntax and style conventions with flake8.
+ii  ros-lyrical-ament-cmake-gen-version-h              2.8.7-3resolute.20260430.012144            amd64        Generate a C header containing the version number of the package
+ii  ros-lyrical-ament-cmake-gmock                      2.8.7-3resolute.20260430.012424            amd64        The ability to add Google mock-based tests in the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-gtest                      2.8.7-3resolute.20260430.012400            amd64        The ability to add gtest-based tests in the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-include-directories        2.8.7-3resolute.20260430.012009            amd64        The functionality to order include directories according to a chain of prefixes in the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-libraries                  2.8.7-3resolute.20260430.012148            amd64        The functionality to deduplicate libraries in the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-lint-cmake                 0.20.6-1resolute.20260516.052020           amd64        The CMake API for ament_lint_cmake to lint CMake code using cmakelint.
+ii  ros-lyrical-ament-cmake-mypy                       0.20.6-1resolute.20260516.051732           amd64        The CMake API for ament_mypy to perform static type analysis on python code with mypy.
+ii  ros-lyrical-ament-cmake-pep257                     0.20.6-1resolute.20260516.051922           amd64        The CMake API for ament_pep257 to check code against the docstring style conventions in PEP 257.
+ii  ros-lyrical-ament-cmake-pytest                     2.8.7-3resolute.20260430.012431            amd64        The ability to run Python tests using pytest in the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-python                     2.8.7-3resolute.20260430.012147            amd64        The ability to use Python in the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-ros                        0.15.8-1resolute.20260606.012449           amd64        The ROS specific CMake bits in the ament buildsystem.
+ii  ros-lyrical-ament-cmake-ros-core                   0.15.8-1resolute.20260430.205343           amd64        Core ROS specific CMake bits in the ament buildsystem.
+ii  ros-lyrical-ament-cmake-target-dependencies        2.8.7-3resolute.20260430.012226            amd64        The ability to add definitions, include directories and libraries of a package to a target in the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-test                       2.8.7-3resolute.20260430.012221            amd64        The ability to add tests in the ament buildsystem in CMake.
+ii  ros-lyrical-ament-cmake-uncrustify                 0.20.6-1resolute.20260516.051746           amd64        The CMake API for ament_uncrustify to check code against styleconventions using uncrustify.
+ii  ros-lyrical-ament-cmake-version                    2.8.7-3resolute.20260430.012146            amd64        The ability to override the exported package version in the ament buildsystem.
+ii  ros-lyrical-ament-cmake-xmllint                    0.20.6-1resolute.20260516.051737           amd64        The CMake API for ament_xmllint to check XML file using xmmlint.
+ii  ros-lyrical-ament-copyright                        0.20.6-1resolute.20260516.051747           amd64        The ability to check source files for copyright and license information.
+ii  ros-lyrical-ament-cppcheck                         0.20.6-1resolute.20260516.051459           amd64        The ability to perform static code analysis on C/C++ code using Cppcheck and generate xUnit test result files.
+ii  ros-lyrical-ament-cpplint                          0.20.6-1resolute.20260516.051451           amd64        The ability to check code against the Google style conventions using cpplint and generate xUnit test result files.
+ii  ros-lyrical-ament-flake8                           0.20.6-1resolute.20260516.051651           amd64        The ability to check code for style and syntax conventions with flake8.
+ii  ros-lyrical-ament-index-cpp                        1.13.3-3resolute.20260430.012544           amd64        C++ API to access the ament resource index.
+ii  ros-lyrical-ament-index-python                     1.13.3-3resolute.20260430.012150           amd64        Python API to access the ament resource index.
+ii  ros-lyrical-ament-lint                             0.20.6-1resolute.20260516.051451           amd64        Providing common API for ament linter packages.
+ii  ros-lyrical-ament-lint-auto                        0.20.6-1resolute.20260516.051716           amd64        The auto-magic functions for ease to use of the ament linters in CMake.
+ii  ros-lyrical-ament-lint-cmake                       0.20.6-1resolute.20260516.051714           amd64        The ability to lint CMake code using cmakelint and generate xUnit test result files.
+ii  ros-lyrical-ament-lint-common                      0.20.6-1resolute.20260516.052212           amd64        The list of commonly used linters in the ament build system in CMake.
+ii  ros-lyrical-ament-mypy                             0.20.6-1resolute.20260516.051526           amd64        Support for mypy static type checking in ament.
+ii  ros-lyrical-ament-package                          0.18.3-3resolute.20260430.010336           amd64        The parser for the manifest files in the ament buildsystem.
+ii  ros-lyrical-ament-pep257                           0.20.6-1resolute.20260516.051744           amd64        The ability to check code against the docstring style conventions in PEP 257 and generate xUnit test result files.
+ii  ros-lyrical-ament-uncrustify                       0.20.6-1resolute.20260516.051459           amd64        The ability to check code against style conventions using uncrustify and generate xUnit test result files.
+ii  ros-lyrical-ament-xmllint                          0.20.6-1resolute.20260516.051652           amd64        The ability to check XML files like the package manifest using xmllint and generate xUnit test result files.
+ii  ros-lyrical-angles                                 1.16.1-3resolute.20260430.012551           amd64        This package provides a set of simple math utilities to work with angles.
+ii  ros-lyrical-backward-ros                           1.0.8-5resolute.20260430.012300            amd64        The backward_ros package is a ros wrapper of backward-cpp from https://github.com/bombela/backward-cpp
+ii  ros-lyrical-builtin-interfaces                     2.4.5-1resolute.20260605.174229            amd64        A package containing message and service definitions for types defined in the OMG IDL Platform Specific Model.
+ii  ros-lyrical-camera-calibration                     7.1.6-1resolute.20260606.024920            amd64        camera_calibration allows easy calibration of monocular or stereo cameras using a checkerboard calibration target.
+ii  ros-lyrical-camera-calibration-parsers             6.4.10-1resolute.20260609.002402           amd64        camera_calibration_parsers contains routines for reading and writing camera calibration parameters.
+ii  ros-lyrical-camera-info-manager                    6.4.10-1resolute.20260609.004059           amd64        This package provides a C++ interface for camera calibration information.
+ii  ros-lyrical-class-loader                           2.9.4-3resolute.20260430.205836            amd64        The class_loader package is a ROS-independent package for loading plugins during runtime and the foundation of the higher level ROS "pluginlib" library.
+ii  ros-lyrical-common-interfaces                      5.9.2-3resolute.20260606.013148            amd64        common_interfaces contains messages and services that are widely used by other ROS packages.
+ii  ros-lyrical-composition                            0.37.8-3resolute.20260606.025003           amd64        Examples for composing multiple nodes in a single process.
+ii  ros-lyrical-composition-interfaces                 2.4.5-1resolute.20260606.002903            amd64        A package containing message and service definitions for managing composable nodes in a container process.
+ii  ros-lyrical-compressed-depth-image-transport       6.2.5-1resolute.20260609.005240            amd64        Compressed_depth_image_transport provides a plugin to image_transport for transparently sending depth images (raw, floating-point) using PNG compression.
+ii  ros-lyrical-compressed-image-transport             6.2.5-1resolute.20260609.005233            amd64        Compressed_image_transport provides a plugin to image_transport for transparently sending images encoded as JPEG or PNG.
+ii  ros-lyrical-console-bridge-vendor                  1.9.1-3resolute.20260430.012606            amd64        Wrapper around console_bridge, providing nothing but a dependency on console_bridge, on some systems.
+ii  ros-lyrical-control-msgs                           6.9.0-3resolute.20260606.012708            amd64        control_msgs contains base messages and actions useful for controlling robots.
+ii  ros-lyrical-controller-interface                   6.7.1-1resolute.20260610.202706            amd64        Base classes for controllers and syntax cookies for supporting common sensor types in controllers and broadcasters
+ii  ros-lyrical-controller-manager                     6.7.1-1resolute.20260610.203018            amd64        The main runnable entrypoint of ros2_control and home of controller management and resource management.
+ii  ros-lyrical-controller-manager-msgs                6.7.1-1resolute.20260606.005853            amd64        Messages and services for the controller manager.
+ii  ros-lyrical-cv-bridge                              4.1.0-3resolute.20260606.022942            amd64        This contains CvBridge, which converts between ROS2 Image messages and OpenCV images.
+ii  ros-lyrical-data-tamer-cpp                         1.0.3-3resolute.20260805.064656            amd64        DataTamer data logging library
+ii  ros-lyrical-data-tamer-msgs                        1.0.3-3resolute.20260728.224929            amd64        Interfaces for data_tamer
+ii  ros-lyrical-demo-nodes-cpp                         0.37.8-3resolute.20260606.024949           amd64        C++ nodes which were previously in the ros2/examples repository but are now just used for demo purposes.
+ii  ros-lyrical-demo-nodes-cpp-native                  0.37.8-3resolute.20260606.024258           amd64        C++ nodes which access the native handles of the rmw implementation.
+ii  ros-lyrical-demo-nodes-py                          0.37.8-3resolute.20260606.024723           amd64        Python nodes which were previously in the ros2/examples repository but are now just used for demo purposes.
+ii  ros-lyrical-depth-image-proc                       7.1.6-1resolute.20260609.004448            amd64        Contains components for processing depth images such as those produced by OpenNI camera.
+ii  ros-lyrical-depthimage-to-laserscan                2.5.1-4resolute.20260606.031048            amd64        depthimage_to_laserscan
+ii  ros-lyrical-desktop                                0.13.0-3resolute.20260617.153257           amd64        A package which extends 'ros_base' and includes high level packages like vizualization tools and demos.
+ii  ros-lyrical-desktop-full                           0.13.0-3resolute.20260617.153703           amd64        Provides a 'batteries included' experience to novice users.
+ii  ros-lyrical-diagnostic-msgs                        5.9.2-3resolute.20260606.012147            amd64        A package containing some diagnostics related message and service definitions.
+ii  ros-lyrical-diagnostic-updater                     4.4.7-1resolute.20260606.025112            amd64        Update and publish diagnostic information.
+ii  ros-lyrical-dummy-map-server                       0.37.8-3resolute.20260606.022941           amd64        dummy map server node
+ii  ros-lyrical-dummy-robot-bringup                    0.37.8-3resolute.20260615.095804           amd64        dummy robot bringup
+ii  ros-lyrical-dummy-sensors                          0.37.8-3resolute.20260606.022948           amd64        dummy sensor nodes
+ii  ros-lyrical-eigen3-cmake-module                    0.5.1-3resolute.20260430.012701            amd64        Exports a custom CMake module to find Eigen3.
+ii  ros-lyrical-example-interfaces                     0.14.1-3resolute.20260606.002907           amd64        Contains message and service definitions used by the examples.
+ii  ros-lyrical-examples-rclcpp-minimal-action-client  0.21.5-3resolute.20260606.024234           amd64        Minimal action client examples
+ii  ros-lyrical-examples-rclcpp-minimal-action-server  0.21.5-3resolute.20260606.024236           amd64        Minimal action server examples
+ii  ros-lyrical-examples-rclcpp-minimal-client         0.21.5-3resolute.20260606.022600           amd64        Examples of minimal service clients
+ii  ros-lyrical-examples-rclcpp-minimal-composition    0.21.5-3resolute.20260606.025338           amd64        Minimalist examples of composing nodes in the same process
+ii  ros-lyrical-examples-rclcpp-minimal-publisher      0.21.5-3resolute.20260606.022821           amd64        Examples of minimal publisher nodes
+ii  ros-lyrical-examples-rclcpp-minimal-service        0.21.5-3resolute.20260606.022555           amd64        A minimal service server which adds two numbers
+ii  ros-lyrical-examples-rclcpp-minimal-subscriber     0.21.5-3resolute.20260606.025328           amd64        Examples of minimal subscribers
+ii  ros-lyrical-examples-rclcpp-minimal-timer          0.21.5-3resolute.20260606.023449           amd64        Examples of minimal nodes which have timers
+ii  ros-lyrical-examples-rclcpp-multithreaded-executor 0.21.5-3resolute.20260606.022827           amd64        Package containing example of how to implement a multithreaded executor
+ii  ros-lyrical-examples-rclpy-executors               0.21.5-3resolute.20260606.025126           amd64        Examples of creating and using exectors to run multiple nodes in the same process
+ii  ros-lyrical-examples-rclpy-minimal-action-client   0.21.5-3resolute.20260606.024648           amd64        Examples of minimal action clients using rclpy.
+ii  ros-lyrical-examples-rclpy-minimal-action-server   0.21.5-3resolute.20260606.024847           amd64        Examples of minimal action servers using rclpy.
+ii  ros-lyrical-examples-rclpy-minimal-client          0.21.5-3resolute.20260606.024856           amd64        Examples of minimal service clients using rclpy.
+ii  ros-lyrical-examples-rclpy-minimal-publisher       0.21.5-3resolute.20260606.025121           amd64        Examples of minimal publishers using rclpy.
+ii  ros-lyrical-examples-rclpy-minimal-service         0.21.5-3resolute.20260606.024843           amd64        Examples of minimal service servers using rclpy.
+ii  ros-lyrical-examples-rclpy-minimal-subscriber      0.21.5-3resolute.20260606.025153           amd64        Examples of minimal subscribers using rclpy.
+ii  ros-lyrical-fastcdr                                2.3.6-1resolute.20260603.150437            amd64        *eProsima Fast CDR* is a C++ serialization library implementing the Common Data Representation (CDR) mechanism defined by the Object Management Group (OMG) consortium.
+ii  ros-lyrical-fastdds                                3.6.1-3resolute.20260603.151311            amd64        eProsima Fast DDS is a C++ implementation of the DDS (Data Distribution Service) standard of the OMG (Object Management Group).
+ii  ros-lyrical-filters                                2.2.2-3resolute.20260606.023442            amd64        This library provides a standardized interface for processing data as a sequence of filters.
+ii  ros-lyrical-foonathan-memory-vendor                1.4.1-1resolute.20260430.223737            amd64        Foonathan/memory vendor package for Fast DDS.
+ii  ros-lyrical-generate-parameter-library             1.2.0-1resolute.20260609.200205            amd64        CMake to generate ROS parameter library.
+ii  ros-lyrical-generate-parameter-library-py          1.2.0-1resolute.20260609.195700            amd64        Python to generate ROS parameter library.
+ii  ros-lyrical-geographic-msgs                        1.0.6-3resolute.20260606.010657            amd64        ROS messages for Geographic Information Systems.
+ii  ros-lyrical-geometry-msgs                          5.9.2-3resolute.20260606.005051            amd64        A package containing some geometry related message definitions.
+ii  ros-lyrical-geometry2                              0.45.7-3resolute.20260606.031029           amd64        A metapackage to bring in the default packages second generation Transform Library in ros, tf2.
+ii  ros-lyrical-gps-msgs                               2.1.2-4resolute.20260606.005049            amd64        GPS messages for use in GPS drivers
+ii  ros-lyrical-gtest-vendor                           1.16.1-3resolute.20260728.172505           amd64        The package provides GoogleTest.
+ii  ros-lyrical-gz-cmake-vendor                        0.4.5-1resolute.20260610.193721            amd64        Vendor package for: gz-cmake 5.1.1 Gazebo CMake : CMake Modules for Gazebo Projects
+ii  ros-lyrical-gz-common-vendor                       0.3.5-4resolute.20260610.195759            amd64        Vendor package for: gz-common 7.1.1 Gazebo Common : AV, Graphics, Events, and much more.
+ii  ros-lyrical-gz-dartsim-vendor                      0.1.3-3resolute.20260430.012723            amd64        Vendor package for the DART physics engine v6.16.6
+ii  ros-lyrical-gz-fuel-tools-vendor                   0.3.1-3resolute.20260610.201010            amd64        Vendor package for: gz-fuel_tools 11.0.0 Gazebo Fuel Tools: Classes and tools for interacting with Gazebo Fuel
+ii  ros-lyrical-gz-gui-vendor                          0.3.1-3resolute.20260610.202329            amd64        Vendor package for: gz-gui 10.0.0 Gazebo GUI : Graphical interfaces for robotics applications
+ii  ros-lyrical-gz-math-vendor                         0.4.3-3resolute.20260610.194148            amd64        Vendor package for: gz-math 9.1.0 Gazebo Math : Math classes and functions for robot applications
+ii  ros-lyrical-gz-msgs-vendor                         0.3.3-3resolute.20260610.200130            amd64        Vendor package for: gz-msgs 12.0.1 Gazebo Messages: Protobuf messages and functions for robot applications
+ii  ros-lyrical-gz-ogre-next-vendor                    0.2.1-1resolute.20260610.193906            amd64        Vendor package for Ogre-next v2.3.3
+ii  ros-lyrical-gz-physics-vendor                      0.4.4-1resolute.20260610.201858            amd64        Vendor package for: gz-physics 9.3.0 Gazebo Physics : Physics classes and functions for robot applications
+ii  ros-lyrical-gz-plugin-vendor                       0.3.1-3resolute.20260610.194129            amd64        Vendor package for: gz-plugin 4.0.0 Gazebo Plugin : Cross-platform C++ library for dynamically loading plugins.
+ii  ros-lyrical-gz-rendering-vendor                    0.4.3-3resolute.20260610.200217            amd64        Vendor package for: gz-rendering 10.0.1 Gazebo Rendering: Rendering library for robot applications
+ii  ros-lyrical-gz-ros2-control                        3.0.8-1resolute.20260610.213505            amd64        Gazebo ros2_control package allows to control simulated robots using ros2_control framework.
+ii  ros-lyrical-gz-sensors-vendor                      0.3.2-3resolute.20260610.202124            amd64        Vendor package for: gz-sensors 10.0.1 Gazebo Sensors : Sensor models for simulation
+ii  ros-lyrical-gz-sim-vendor                          0.4.5-1resolute.20260610.204226            amd64        Vendor package for: gz-sim 10.4.0 Gazebo Sim : A Robotic Simulator
+ii  ros-lyrical-gz-tools-vendor                        0.2.1-3resolute.20260610.193907            amd64        Vendor package for: gz-tools2 2.0.3 Gazebo Tools: Entrypoint to Gazebo's command line interface
+ii  ros-lyrical-gz-transport-vendor                    0.3.4-3resolute.20260610.200959            amd64        Vendor package for: gz-transport 15.0.2 Gazebo Transport: Provides fast and efficient asynchronous message passing, services, and data logging.
+ii  ros-lyrical-gz-utils-vendor                        0.4.1-3resolute.20260610.193922            amd64        Vendor package for: gz-utils 4.0.0 Gazebo Utils : Classes and functions for robot applications
+ii  ros-lyrical-hardware-interface                     6.7.1-1resolute.20260610.202214            amd64        Base classes for hardware abstraction and tooling for them
+ii  ros-lyrical-image-common                           6.4.10-1resolute.20260609.004539           amd64        Common code for working with images in ROS.
+ii  ros-lyrical-image-geometry                         4.1.0-3resolute.20260606.013204            amd64        `image_geometry` contains C++ and Python libraries for interpreting images geometrically.
+ii  ros-lyrical-image-pipeline                         7.1.6-1resolute.20260609.010530            amd64        image_pipeline fills the gap between getting raw images from a camera driver and higher-level vision processing.
+ii  ros-lyrical-image-proc                             7.1.6-1resolute.20260609.003314            amd64        Single image rectification and color processing.
+ii  ros-lyrical-image-publisher                        7.1.6-1resolute.20260609.005436            amd64        Contains a node publish an image stream from single image file or avi motion file.
+ii  ros-lyrical-image-rotate                           7.1.6-1resolute.20260609.004713            amd64        Contains a node that rotates an image stream in a way that minimizes the angle between a vector in some arbitrary frame and a vector in the camera frame.
+ii  ros-lyrical-image-tools                            0.37.8-3resolute.20260606.024321           amd64        Tools to capture and play back images to and from DDS subscriptions and publications.
+ii  ros-lyrical-image-transport                        6.4.10-1resolute.20260609.002409           amd64        image_transport should always be used to subscribe to and publish images.
+ii  ros-lyrical-image-transport-plugins                6.2.5-1resolute.20260609.072223            amd64        A set of plugins for publishing and subscribing to sensor_msgs/Image topics in representations other than raw pixel data.
+ii  ros-lyrical-image-view                             7.1.6-1resolute.20260609.003324            amd64        A simple viewer for ROS image topics.
+ii  ros-lyrical-interactive-markers                    2.8.4-1resolute.20260606.030639            amd64        3D interactive marker communication library for RViz and similar tools.
+ii  ros-lyrical-intra-process-demo                     0.37.8-3resolute.20260606.022602           amd64        Demonstrations of intra process communication.
+ii  ros-lyrical-joint-limits                           6.7.1-1resolute.20260606.033105            amd64        Package with interfaces for handling of joint limits in controllers or in hardware.
+ii  ros-lyrical-joy                                    3.3.0-4resolute.20260606.031052            amd64        The joy package contains joy_node, a node that interfaces a generic joystick to ROS 2.
+ii  ros-lyrical-kdl-parser                             3.0.1-3resolute.20260606.021907            amd64        The Kinematics and Dynamics Library (KDL) defines a tree structure to represent the kinematic and dynamic parameters of a robot mechanism.
+ii  ros-lyrical-keyboard-handler                       0.5.1-1resolute.20260430.205257            amd64        Handler for input from keyboard
+ii  ros-lyrical-laser-filters                          2.3.2-3resolute.20260606.031041            amd64        Assorted filters designed to operate on 2D planar laser scanners, which use the sensor_msgs/LaserScan type.
+ii  ros-lyrical-laser-geometry                         2.11.3-6resolute.20260606.030609           amd64        This package contains a class for converting from a 2D laser scan as defined by sensor_msgs/LaserScan into a point cloud as defined by sensor_msgs/PointCloud or sensor_msgs/PointCloud2.
+ii  ros-lyrical-launch                                 3.9.7-3resolute.20260430.012234            amd64        The ROS launch tool.
+ii  ros-lyrical-launch-ros                             0.29.8-1resolute.20260606.024723           amd64        ROS specific extensions to the launch tool.
+ii  ros-lyrical-launch-testing                         3.9.7-3resolute.20260430.012532            amd64        A package to create tests which involve launch files and multiple processes.
+ii  ros-lyrical-launch-testing-ament-cmake             3.9.7-3resolute.20260430.012803            amd64        A package providing cmake functions for running launch tests from the build.
+ii  ros-lyrical-launch-testing-ros                     0.29.8-1resolute.20260606.030350           amd64        A package providing utilities for writing ROS2 enabled launch tests.
+ii  ros-lyrical-launch-xml                             3.9.7-3resolute.20260430.012309            amd64        XML frontend for the launch package.
+ii  ros-lyrical-launch-yaml                            3.9.7-3resolute.20260430.012319            amd64        YAML frontend for the launch package.
+ii  ros-lyrical-libstatistics-collector                2.1.2-1resolute.20260606.020847            amd64        Lightweight aggregation utilities to collect statistics and measure message metrics.
+ii  ros-lyrical-libyaml-vendor                         1.8.1-3resolute.20260430.012758            amd64        Exports a custom CMake module to find libyaml.
+ii  ros-lyrical-lifecycle                              0.37.8-3resolute.20260606.023602           amd64        Package containing demos for lifecycle implementation
+ii  ros-lyrical-lifecycle-msgs                         2.4.5-1resolute.20260605.215037            amd64        A package containing some lifecycle related message and service definitions.
+ii  ros-lyrical-logging-demo                           0.37.8-3resolute.20260606.023912           amd64        Examples for using and configuring loggers.
+ii  ros-lyrical-lz4-cmake-module                       0.33.3-1resolute.20260512.194500           amd64        LZ4 compression cmake module package
+ii  ros-lyrical-map-msgs                               2.6.1-1resolute.20260606.012912            amd64        This package defines messages commonly used in mapping packages.
+ii  ros-lyrical-marine-acoustic-msgs                   2.1.0-3resolute.20260606.010529            amd64        The marine_acoustic_msgs package, including messages for common underwater sensors (DVL, multibeam sonar, imaging sonar)
+ii  ros-lyrical-mcap-vendor                            0.33.3-1resolute.20260512.194932           amd64        mcap vendor package
+ii  ros-lyrical-message-filters                        7.4.1-1resolute.20260606.024523            amd64        A set of ROS 2 message filters which take in messages and may output those messages at a later time, based on the conditions that filter needs met.
+ii  ros-lyrical-nav-msgs                               5.9.2-3resolute.20260606.012231            amd64        A package containing some navigation related message and service definitions.
+ii  ros-lyrical-nmea-msgs                              2.1.0-4resolute.20260606.004544            amd64        The nmea_msgs package contains messages related to data in the NMEA format.
+ii  ros-lyrical-nmea-navsat-driver                     2.0.1-4resolute.20260606.025912            amd64        Package to parse NMEA strings and publish a very simple GPS message.
+ii  ros-lyrical-pal-statistics                         2.7.0-3resolute.20260606.030017            amd64        The pal_statistics package
+ii  ros-lyrical-pal-statistics-msgs                    2.7.0-3resolute.20260606.005409            amd64        Statistics msgs package
+ii  ros-lyrical-pcl-conversions                        2.9.0-1resolute.20260606.025215            amd64        Provides conversions from PCL data types and ROS message types
+ii  ros-lyrical-pcl-msgs                               1.0.0-10resolute.20260606.011208           amd64        Package containing PCL (Point Cloud Library)-related ROS messages.
+ii  ros-lyrical-pcl-ros                                2.9.0-1resolute.20260606.040138            amd64        PCL (Point Cloud Library) ROS interface stack.
+ii  ros-lyrical-pendulum-control                       0.37.8-3resolute.20260606.033933           amd64        Demonstrates ROS 2's realtime capabilities with a simulated inverted pendulum.
+ii  ros-lyrical-pendulum-msgs                          0.37.8-3resolute.20260605.215113           amd64        Custom messages for real-time pendulum control.
+ii  ros-lyrical-perception                             0.13.0-3resolute.20260609.072625           amd64        A package which aggregates common perception packages.
+ii  ros-lyrical-perception-pcl                         2.9.0-1resolute.20260606.042638            amd64        PCL (Point Cloud Library) ROS interface stack.
+ii  ros-lyrical-plotjuggler                            3.17.2-1resolute.20260805.072115           amd64        PlotJuggler: juggle with data
+ii  ros-lyrical-plotjuggler-msgs                       0.2.3-6resolute.20260728.231612            amd64        Special Messages for PlotJuggler
+ii  ros-lyrical-pluginlib                              5.8.4-3resolute.20260430.210213            amd64        The pluginlib package provides tools for writing and dynamically loading plugins using the ROS build infrastructure.
+ii  ros-lyrical-point-cloud-transport                  5.4.2-1resolute.20260606.024910            amd64        Support for transporting PointCloud2 messages in compressed format and plugin interface for implementing additional PointCloud2 transports.
+ii  ros-lyrical-python-qt-binding                      2.5.4-3resolute.20260430.013109            amd64        This stack provides Python bindings for Qt.
+ii  ros-lyrical-qt-dotgraph                            2.11.0-1resolute.20260508.163847           amd64        qt_dotgraph provides helpers to work with dot graphs.
+ii  ros-lyrical-qt-gui                                 2.11.0-1resolute.20260508.163821           amd64        qt_gui provides the infrastructure for an integrated graphical user interface based on Qt.
+ii  ros-lyrical-qt-gui-cpp                             2.11.0-1resolute.20260508.164955           amd64        qt_gui_cpp provides the foundation for C++-bindings for qt_gui and creates bindings for every generator available.
+ii  ros-lyrical-qt-gui-py-common                       2.11.0-1resolute.20260508.163823           amd64        qt_gui_py_common provides common functionality for GUI plugins written in Python.
+ii  ros-lyrical-quality-of-service-demo-cpp            0.37.8-3resolute.20260606.024954           amd64        C++ Demo applications for Quality of Service features
+ii  ros-lyrical-quality-of-service-demo-py             0.37.8-3resolute.20260606.024850           amd64        Python Demo applications for Quality of Service features
+ii  ros-lyrical-rcl                                    10.4.4-1resolute.20260606.020512           amd64        The ROS client library common implementation.
+ii  ros-lyrical-rcl-action                             10.4.4-1resolute.20260606.023242           amd64        Package containing a C-based ROS action implementation
+ii  ros-lyrical-rcl-interfaces                         2.4.5-1resolute.20260606.000256            amd64        The ROS client library common interfaces.
+ii  ros-lyrical-rcl-lifecycle                          10.4.4-1resolute.20260606.020836           amd64        Package containing a C-based lifecycle implementation
+ii  ros-lyrical-rcl-logging-implementation             3.4.1-3resolute.20260606.020228            amd64        Provides the ability to load logging implementations at runtime.
+ii  ros-lyrical-rcl-logging-interface                  3.4.1-3resolute.20260606.014207            amd64        Interface that rcl_logging backends needs to implement.
+ii  ros-lyrical-rcl-logging-spdlog                     3.4.1-3resolute.20260606.015806            amd64        Implementation of rcl_logging API for an spdlog backend.
+ii  ros-lyrical-rcl-yaml-param-parser                  10.4.4-1resolute.20260606.012708           amd64        Parse a YAML parameter file and populate the C data structure.
+ii  ros-lyrical-rclcpp                                 32.0.0-1resolute.20260606.021228           amd64        The ROS client library in C++.
+ii  ros-lyrical-rclcpp-action                          32.0.0-1resolute.20260606.023626           amd64        Adds action APIs for C++.
+ii  ros-lyrical-rclcpp-components                      32.0.0-1resolute.20260606.023404           amd64        Package containing tools for dynamically loadable components
+ii  ros-lyrical-rclcpp-lifecycle                       32.0.0-1resolute.20260606.023417           amd64        Package containing a prototype for lifecycle implementation
+ii  ros-lyrical-rclpy                                  10.0.10-1resolute.20260606.023616          amd64        Package containing the Python client.
+ii  ros-lyrical-rcpputils                              2.14.5-1resolute.20260430.205810           amd64        Package containing utility code for C++.
+ii  ros-lyrical-rcutils                                7.1.1-3resolute.20260430.205503            amd64        Package containing various utility types and functions for C
+ii  ros-lyrical-realtime-tools                         5.2.0-3resolute.20260606.032632            amd64        Contains a set of tools that can be used from a hard realtime thread, without breaking the realtime behavior.
+ii  ros-lyrical-resource-retriever                     3.9.3-3resolute.20260606.014123            amd64        This package retrieves data from url-format files such as http://, ftp://, package:// file://, etc., and loads the data into memory.
+ii  ros-lyrical-resource-retriever-interfaces          0.0.2-1resolute.20260606.003041            amd64        ROS interfaces for working with resources like meshes.
+ii  ros-lyrical-resource-retriever-service-plugin      0.0.2-1resolute.20260606.022533            amd64        A resource retriever plugin that relies on talking to a service (specified by resource_retriever_interfaces) for retrieving resources like meshes.
+ii  ros-lyrical-rmw                                    7.10.1-5resolute.20260605.172559           amd64        Contains the ROS middleware API.
+ii  ros-lyrical-rmw-dds-common                         6.0.0-3resolute.20260606.003034            amd64        Define a common interface between DDS implementations of ROS middleware.
+ii  ros-lyrical-rmw-fastrtps-cpp                       9.4.8-1resolute.20260606.004157            amd64        Implement the ROS middleware interface using eProsima FastRTPS static code generation in C++.
+ii  ros-lyrical-rmw-fastrtps-shared-cpp                9.4.8-1resolute.20260606.003446            amd64        Code shared on static and dynamic type support of rmw_fastrtps_cpp.
+ii  ros-lyrical-rmw-implementation                     3.1.5-6resolute.20260606.005254            amd64        Proxy implementation of the ROS 2 Middleware Interface.
+ii  ros-lyrical-rmw-implementation-cmake               7.10.1-5resolute.20260430.013205           amd64        CMake functions which can discover and enumerate available implementations.
+ii  ros-lyrical-rmw-security-common                    7.10.1-5resolute.20260605.173154           amd64        Define a common rmw secutiry utils
+ii  ros-lyrical-rmw-test-fixture                       0.15.8-1resolute.20260605.173211           amd64        Plugin interface for tools for isolating ROS communication at the RMW layer
+ii  ros-lyrical-rmw-test-fixture-implementation        0.15.8-1resolute.20260606.005810           amd64        Tools for isolating ROS environments at the RMW layer
+ii  ros-lyrical-robot-localization                     3.10.0-4resolute.20260606.030714           amd64        Provides nonlinear state estimation through sensor fusion of an abritrary number of sensors.
+ii  ros-lyrical-robot-state-publisher                  3.5.5-3resolute.20260606.025604            amd64        This package take the joint angles of a robot as input, and publishes the 3D poses of the robot links to tf2, using a kinematic tree model of the robot.
+ii  ros-lyrical-ros-base                               0.13.0-3resolute.20260606.042427           amd64        A package which extends 'ros_core' and includes other basic functionalities like tf2 and urdf.
+ii  ros-lyrical-ros-core                               0.13.0-3resolute.20260606.042109           amd64        A package to aggregate the packages required to use publish / subscribe, services, generate messages and other core ROS concepts.
+ii  ros-lyrical-ros-environment                        4.5.1-1resolute.20260430.033656            amd64        The package provides the environment variables `ROS_VERSION` and `ROS_DISTRO`.
+ii  ros-lyrical-ros-gz                                 3.0.9-1resolute.20260617.153708            amd64        Meta-package containing interfaces for using ROS 2 with Gazebo simulation.
+ii  ros-lyrical-ros-gz-bridge                          3.0.9-1resolute.20260610.201426            amd64        Bridge communication between ROS and Gazebo Transport
+ii  ros-lyrical-ros-gz-image                           3.0.9-1resolute.20260610.203449            amd64        Image utilities for Gazebo simulation with ROS.
+ii  ros-lyrical-ros-gz-interfaces                      3.0.9-1resolute.20260609.002411            amd64        Message and service data structures for interacting with Gazebo from ROS2.
+ii  ros-lyrical-ros-gz-sim                             3.0.9-1resolute.20260610.213303            amd64        Tools for using Gazebo Sim simulation with ROS.
+ii  ros-lyrical-ros-gz-sim-demos                       3.0.9-1resolute.20260617.152947            amd64        Demos using Gazebo Sim simulation with ROS.
+ii  ros-lyrical-ros-workspace                          1.0.3-9resolute.20260430.010725            amd64        Provides the prefix level environment files for ROS 2 packages.
+ii  ros-lyrical-ros2-control-cmake                     0.3.0-3resolute.20260430.013207            amd64        Provides CMake macros used by the ros2_control framework
+ii  ros-lyrical-ros2action                             0.40.7-1resolute.20260606.033915           amd64        The action command for ROS 2 command line tools.
+ii  ros-lyrical-ros2bag                                0.33.3-1resolute.20260606.041717           amd64        Entry point for rosbag in ROS 2
+ii  ros-lyrical-ros2cli                                0.40.7-1resolute.20260606.033717           amd64        Framework for ROS 2 command line tools.
+ii  ros-lyrical-ros2cli-common-extensions              0.5.2-3resolute.20260606.041529            amd64        Meta package for ros2cli common extensions
+ii  ros-lyrical-ros2component                          0.40.7-1resolute.20260606.041310           amd64        The component command for ROS 2 command line tools.
+ii  ros-lyrical-ros2doctor                             0.40.7-1resolute.20260606.034032           amd64        A command line tool to check potential issues in a ROS 2 system
+ii  ros-lyrical-ros2interface                          0.40.7-1resolute.20260606.041259           amd64        The interface command for ROS 2 command line tools
+ii  ros-lyrical-ros2launch                             0.29.8-1resolute.20260606.041339           amd64        The launch command for ROS 2 command line tools.
+ii  ros-lyrical-ros2lifecycle                          0.40.7-1resolute.20260606.034107           amd64        The lifecycle command for ROS 2 command line tools.
+ii  ros-lyrical-ros2multicast                          0.40.7-1resolute.20260606.041146           amd64        The multicast command for ROS 2 command line tools.
+ii  ros-lyrical-ros2node                               0.40.7-1resolute.20260606.034003           amd64        The node command for ROS 2 command line tools.
+ii  ros-lyrical-ros2param                              0.40.7-1resolute.20260606.034112           amd64        The param command for ROS 2 command line tools.
+ii  ros-lyrical-ros2pkg                                0.40.7-1resolute.20260606.041153           amd64        The pkg command for ROS 2 command line tools.
+ii  ros-lyrical-ros2plugin                             5.8.4-3resolute.20260606.041336            amd64        The plugin command for ROS 2 command line tools.
+ii  ros-lyrical-ros2run                                0.40.7-1resolute.20260606.041357           amd64        The run command for ROS 2 command line tools.
+ii  ros-lyrical-ros2service                            0.40.7-1resolute.20260606.033911           amd64        The service command for ROS 2 command line tools.
+ii  ros-lyrical-ros2topic                              0.40.7-1resolute.20260606.033958           amd64        The topic command for ROS 2 command line tools.
+ii  ros-lyrical-rosbag2                                0.33.3-1resolute.20260606.042320           amd64        Meta package for rosbag2 related packages
+ii  ros-lyrical-rosbag2-compression                    0.33.3-1resolute.20260606.034624           amd64        Compression implementations for rosbag2 bags and messages.
+ii  ros-lyrical-rosbag2-compression-zstd               0.33.3-1resolute.20260606.042000           amd64        Zstandard compression library implementation of rosbag2_compression
+ii  ros-lyrical-rosbag2-cpp                            0.33.3-1resolute.20260606.033611           amd64        C++ ROSBag2 client library
+ii  ros-lyrical-rosbag2-interfaces                     0.33.3-1resolute.20260606.003424           amd64        Interface definitions for controlling rosbag2
+ii  ros-lyrical-rosbag2-py                             0.33.3-1resolute.20260606.040609           amd64        Python API for rosbag2
+ii  ros-lyrical-rosbag2-storage                        0.33.3-1resolute.20260606.033205           amd64        ROS2 independent storage format to store serialized ROS2 messages
+ii  ros-lyrical-rosbag2-storage-default-plugins        0.33.3-1resolute.20260606.041358           amd64        Intermediate metapackage to point at default storage plugin(s) for rosbag2
+ii  ros-lyrical-rosbag2-storage-mcap                   0.33.3-1resolute.20260606.033621           amd64        rosbag2 storage plugin using the MCAP file format
+ii  ros-lyrical-rosbag2-storage-sqlite3                0.33.3-1resolute.20260606.033635           amd64        ROSBag2 SQLite3 storage plugin
+ii  ros-lyrical-rosbag2-transport                      0.33.3-1resolute.20260606.035010           amd64        Layer encapsulating ROS middleware to allow rosbag2 to be used with or without middleware
+ii  ros-lyrical-rosgraph-msgs                          2.4.5-1resolute.20260606.003452            amd64        Messages relating to the ROS Computation Graph.
+ii  ros-lyrical-rosidl-adapter                         5.2.1-1resolute.20260605.171203            amd64        API and scripts to parse .msg/.srv/.action files and convert them to .idl.
+ii  ros-lyrical-rosidl-buffer                          5.2.1-1resolute.20260605.170737            amd64        Core Buffer types and implementations for ROS2 native buffer feature.
+ii  ros-lyrical-rosidl-buffer-backend                  5.2.1-1resolute.20260605.173006            amd64        Buffer backend interface for ROS2 buffer types
+ii  ros-lyrical-rosidl-buffer-backend-registry         5.2.1-1resolute.20260605.173257            amd64        Backend discovery and plugin loading for ROS2 buffer types
+ii  ros-lyrical-rosidl-buffer-py                       5.2.1-1resolute.20260605.171211            amd64        Python bindings for rosidl::Buffer, providing a Buffer class that supports vendor-specific memory backends (CPU, GPU, custom) for rclpy users.
+ii  ros-lyrical-rosidl-cli                             5.2.1-1resolute.20260605.171013            amd64        Command line tools for ROS interface generation.
+ii  ros-lyrical-rosidl-cmake                           5.2.1-1resolute.20260605.171757            amd64        The CMake functionality to invoke code generation for ROS interface files.
+ii  ros-lyrical-rosidl-core-generators                 0.4.3-3resolute.20260605.173955            amd64        A configuration package defining core ROS interface generators.
+ii  ros-lyrical-rosidl-core-runtime                    0.4.3-3resolute.20260605.173933            amd64        A configuration package defining runtime dependencies for core ROS interfaces.
+ii  ros-lyrical-rosidl-default-generators              1.8.1-3resolute.20260605.193418            amd64        A configuration package defining the default ROS interface generators.
+ii  ros-lyrical-rosidl-default-runtime                 1.8.1-3resolute.20260605.193404            amd64        A configuration package defining the runtime for the ROS interfaces.
+ii  ros-lyrical-rosidl-dynamic-typesupport             0.4.1-3resolute.20260605.172147            amd64        Unified serialization support interface for dynamic typesupport in C.
+ii  ros-lyrical-rosidl-dynamic-typesupport-fastrtps    0.5.1-3resolute.20260605.172602            amd64        FastDDS serialization support implementation for use with C/C++.
+ii  ros-lyrical-rosidl-generator-c                     5.2.1-1resolute.20260605.172039            amd64        Generate the ROS interfaces in C.
+ii  ros-lyrical-rosidl-generator-cpp                   5.2.1-1resolute.20260605.172501            amd64        Generate the ROS interfaces in C++.
+ii  ros-lyrical-rosidl-generator-py                    0.27.2-3resolute.20260605.173055           amd64        Generate the ROS interfaces in Python.
+ii  ros-lyrical-rosidl-generator-rs                    0.4.12-3resolute.20260605.172822           amd64        Generate the ROS interfaces in Rust.
+ii  ros-lyrical-rosidl-generator-type-description      5.2.1-1resolute.20260605.171532            amd64        Generate hashes and descriptions of ROS 2 interface types, per REP-2011.
+ii  ros-lyrical-rosidl-parser                          5.2.1-1resolute.20260605.171423            amd64        The parser for `.idl` ROS interface files.
+ii  ros-lyrical-rosidl-pycommon                        5.2.1-1resolute.20260605.171558            amd64        Common Python functions used by rosidl packages.
+ii  ros-lyrical-rosidl-runtime-c                       5.2.1-1resolute.20260605.171552            amd64        Provides definitions, initialization and finalization functions, and macros for getting and working with rosidl typesupport types in C.
+ii  ros-lyrical-rosidl-runtime-cpp                     5.2.1-1resolute.20260605.172131            amd64        Provides definitions and templated functions for getting and working with rosidl typesupport types in C++.
+ii  ros-lyrical-rosidl-runtime-py                      0.15.2-3resolute.20260605.172255           amd64        Runtime utilities for working with generated ROS interfaces in Python.
+ii  ros-lyrical-rosidl-typesupport-c                   3.4.2-3resolute.20260605.172527            amd64        Generate the type support for C messages.
+ii  ros-lyrical-rosidl-typesupport-cpp                 3.4.2-3resolute.20260605.172906            amd64        Generate the type support for C++ messages.
+ii  ros-lyrical-rosidl-typesupport-fastrtps-c          3.9.5-3resolute.20260605.173622            amd64        Generate the C interfaces for eProsima FastRTPS.
+ii  ros-lyrical-rosidl-typesupport-fastrtps-cpp        3.9.5-3resolute.20260605.173343            amd64        Generate the C++ interfaces for eProsima FastRTPS.
+ii  ros-lyrical-rosidl-typesupport-interface           5.2.1-1resolute.20260605.170800            amd64        The interface for rosidl typesupport packages.
+ii  ros-lyrical-rosidl-typesupport-introspection-c     5.2.1-1resolute.20260605.172306            amd64        Generate the message type support for dynamic message construction in C.
+ii  ros-lyrical-rosidl-typesupport-introspection-cpp   5.2.1-1resolute.20260605.172624            amd64        Generate the message type support for dynamic message construction in C++.
+ii  ros-lyrical-rpyutils                               0.7.2-3resolute.20260430.011122            amd64        Package containing various utility types and functions for Python
+ii  ros-lyrical-rqt-action                             2.5.0-1resolute.20260617.152519            amd64        rqt_action provides a feature to introspect all available ROS action types.
+ii  ros-lyrical-rqt-bag                                2.2.4-1resolute.20260609.010113            amd64        rqt_bag provides a GUI plugin for displaying and replaying ROS bag files.
+ii  ros-lyrical-rqt-bag-plugins                        2.2.4-1resolute.20260617.152952            amd64        rqt_bag provides a GUI plugin for displaying and replaying ROS bag files.
+ii  ros-lyrical-rqt-common-plugins                     1.2.0-5resolute.20260617.153058            amd64        rqt_common_plugins metapackage provides ROS backend graphical tools suite that can be used on/off of robot runtime.
+ii  ros-lyrical-rqt-console                            2.4.4-1resolute.20260617.152213            amd64        rqt_console provides a GUI plugin for displaying and filtering ROS messages.
+ii  ros-lyrical-rqt-graph                              1.8.4-1resolute.20260617.152248            amd64        rqt_graph provides a GUI plugin for visualizing the ROS computation graph.
+ii  ros-lyrical-rqt-gui                                1.10.5-1resolute.20260606.033817           amd64        rqt_gui provides the main to start an instance of the ROS integrated graphical user interface provided by qt_gui.
+ii  ros-lyrical-rqt-gui-cpp                            1.10.5-1resolute.20260606.033217           amd64        rqt_gui_cpp enables GUI plugins to use the C++ client library for ROS.
+ii  ros-lyrical-rqt-gui-py                             1.10.5-1resolute.20260606.034628           amd64        rqt_gui_py enables GUI plugins to use the Python client library for ROS.
+ii  ros-lyrical-rqt-image-view                         2.0.5-3resolute.20260609.005455            amd64        rqt_image_view provides a GUI plugin for displaying images using image_transport.
+ii  ros-lyrical-rqt-msg                                1.7.3-1resolute.20260617.152432            amd64        A Python GUI plugin for introspecting available ROS message types.
+ii  ros-lyrical-rqt-plot                               1.7.6-1resolute.20260617.152520            amd64        rqt_plot provides a GUI plugin visualizing numeric values in a 2D plot using different plotting backends.
+ii  ros-lyrical-rqt-publisher                          1.10.4-1resolute.20260617.152522           amd64        rqt_publisher provides a GUI plugin for publishing arbitrary messages with fixed or computed field values.
+ii  ros-lyrical-rqt-py-common                          1.10.5-1resolute.20260606.033744           amd64        rqt_py_common provides common functionality for rqt plugins written in Python.
+ii  ros-lyrical-rqt-py-console                         1.5.3-1resolute.20260617.152243            amd64        rqt_py_console is a Python GUI plugin providing an interactive Python console.
+ii  ros-lyrical-rqt-reconfigure                        1.8.6-1resolute.20260617.152424            amd64        This rqt plugin provides a way to view and edit parameters on nodes.
+ii  ros-lyrical-rqt-service-caller                     1.5.3-1resolute.20260617.152523            amd64        rqt_service_caller provides a GUI plugin for calling arbitrary services.
+ii  ros-lyrical-rqt-shell                              1.4.2-1resolute.20260617.152250            amd64        rqt_shell is a Python GUI plugin providing an interactive shell.
+ii  ros-lyrical-rqt-srv                                1.4.1-3resolute.20260617.152522            amd64        A Python GUI plugin for introspecting available ROS service types.
+ii  ros-lyrical-rqt-topic                              2.1.1-1resolute.20260606.035105            amd64        rqt_topic provides a GUI plugin for displaying debug information about ROS topics including publishers, subscribers, publishing rate, and ROS Messages.
+ii  ros-lyrical-rsl                                    1.3.0-3resolute.20260606.033220            amd64        ROS Support Library
+ii  ros-lyrical-rttest                                 0.20.1-1resolute.20260508.163821           amd64        Instrumentation library for real-time performance testing
+ii  ros-lyrical-rviz-common                            15.2.4-1resolute.20260615.081737           amd64        Common rviz API, used by rviz plugins and applications.
+ii  ros-lyrical-rviz-default-plugins                   15.2.4-1resolute.20260615.084839           amd64        Several default plugins for rviz to cover the basic functionality.
+ii  ros-lyrical-rviz-imu-plugin                        2.2.2-3resolute.20260615.084905            amd64        RVIZ plugin for IMU visualization
+ii  ros-lyrical-rviz-ogre-vendor                       15.2.4-1resolute.20260612.184203           amd64        Wrapper around ogre3d, it provides a fixed CMake module and an ExternalProject build of ogre.
+ii  ros-lyrical-rviz-rendering                         15.2.4-1resolute.20260612.192107           amd64        Library which provides the 3D rendering functionality in rviz.
+ii  ros-lyrical-rviz2                                  15.2.4-1resolute.20260615.095032           amd64        3D visualization tool for ROS.
+ii  ros-lyrical-sdformat-urdf                          2.1.0-3resolute.20260610.201857            amd64        URDF plugin to parse SDFormat XML into URDF C++ DOM objects.
+ii  ros-lyrical-sdformat-vendor                        0.3.3-3resolute.20260610.200519            amd64        Vendor package for: sdformat 16.0.1 SDFormat is an XML file format that describes environments, objects, and robots in a manner suitable for robotic applications
+ii  ros-lyrical-sdl2-vendor                            3.3.0-4resolute.20260430.013310            amd64        Vendor library for SDL2.
+ii  ros-lyrical-sensor-msgs                            5.9.2-3resolute.20260606.010122            amd64        A package containing some sensor data related message and service definitions.
+ii  ros-lyrical-sensor-msgs-py                         5.9.2-3resolute.20260606.011941            amd64        A package for easy creation and reading of PointCloud2 messages in Python.
+ii  ros-lyrical-service-msgs                           2.4.5-1resolute.20260605.184435            amd64        Messages definitions common among all ROS services
+ii  ros-lyrical-shape-msgs                             5.9.2-3resolute.20260606.010556            amd64        A package containing some message definitions which describe geometric shapes.
+ii  ros-lyrical-simulation                             0.13.0-3resolute.20260610.214541           amd64        A package which extends 'ros_base' and includes simulation packages.
+ii  ros-lyrical-simulation-interfaces                  2.1.0-3resolute.20260606.010701            amd64        A package containing simulation interfaces including messages, services and actions
+ii  ros-lyrical-spdlog-vendor                          1.8.0-3resolute.20260430.013407            amd64        Wrapper around spdlog, providing nothing but a dependency on spdlog, on some systems.
+ii  ros-lyrical-sros2                                  0.16.6-1resolute.20260606.034004           amd64        Command line tools for managing SROS2 keys
+ii  ros-lyrical-sros2-cmake                            0.16.6-1resolute.20260606.041305           amd64        CMake macros to configure security
+ii  ros-lyrical-statistics-msgs                        2.4.5-1resolute.20260606.000732            amd64        Message definitions for reporting statistics for topics and system resources.
+ii  ros-lyrical-std-msgs                               5.9.2-3resolute.20260606.003418            amd64        A package containing some standard message definitions.
+ii  ros-lyrical-std-srvs                               5.9.2-3resolute.20260606.003402            amd64        A package containing some standard service definitions.
+ii  ros-lyrical-stereo-image-proc                      7.1.6-1resolute.20260609.004755            amd64        Stereo and single image rectification and disparity processing.
+ii  ros-lyrical-stereo-msgs                            5.9.2-3resolute.20260606.011314            amd64        A package containing some stereo camera related message definitions.
+ii  ros-lyrical-tango-icons-vendor                     0.5.1-3resolute.20260430.013449            amd64        tango_icons_vendor provides the public domain Tango icons for non-linux systems (Tango Icon Library) from the Tango Desktop Project
+ii  ros-lyrical-tcb-span                               2.0.3-1resolute.20260516.051513            amd64        Implementation of C++20's std::span
+ii  ros-lyrical-teleop-twist-joy                       2.6.5-3resolute.20260606.031807            amd64        Generic joystick teleop for twist robots.
+ii  ros-lyrical-teleop-twist-keyboard                  2.4.1-3resolute.20260606.024742            amd64        A robot-agnostic teleoperation node to convert keyboard commands to Twist messages.
+ii  ros-lyrical-tf-transformations                     1.1.1-3resolute.20260430.011128            amd64        Reimplementation of the tf/transformations.py library for common Python spatial operations
+ii  ros-lyrical-tf2                                    0.45.7-3resolute.20260606.012646           amd64        tf2 is the second generation of the transform library, which lets the user keep track of multiple coordinate frames over time.
+ii  ros-lyrical-tf2-bullet                             0.45.7-3resolute.20260606.030209           amd64        tf2_bullet
+ii  ros-lyrical-tf2-eigen                              0.45.7-3resolute.20260606.030154           amd64        tf2_eigen
+ii  ros-lyrical-tf2-eigen-kdl                          0.45.7-3resolute.20260606.020401           amd64        Conversion functions between: - Eigen and KDL
+ii  ros-lyrical-tf2-geometry-msgs                      0.45.7-3resolute.20260606.030154           amd64        tf2_geometry_msgs
+ii  ros-lyrical-tf2-kdl                                0.45.7-3resolute.20260606.025601           amd64        KDL binding for tf2
+ii  ros-lyrical-tf2-msgs                               0.45.7-3resolute.20260606.010252           amd64        tf2_msgs
+ii  ros-lyrical-tf2-py                                 0.45.7-3resolute.20260606.024543           amd64        Python bindings for the tf2 library
+ii  ros-lyrical-tf2-ros                                0.45.7-3resolute.20260606.024859           amd64        This package contains the C++ ROS bindings for the tf2 library
+ii  ros-lyrical-tf2-ros-py                             0.45.7-3resolute.20260606.025259           amd64        This package contains the ROS Python bindings for the tf2 library
+ii  ros-lyrical-tf2-sensor-msgs                        0.45.7-3resolute.20260606.025802           amd64        Small lib to transform sensor_msgs with tf.
+ii  ros-lyrical-tf2-tools                              0.45.7-3resolute.20260606.030509           amd64        tf2_tools
+ii  ros-lyrical-theora-image-transport                 6.2.5-1resolute.20260609.071228            amd64        Theora_image_transport provides a plugin to image_transport for transparently sending an image stream encoded with the Theora codec.
+ii  ros-lyrical-tlsf                                   0.11.1-3resolute.20260430.013521           amd64        TLSF allocator version 2.4.6
+ii  ros-lyrical-tlsf-cpp                               0.20.1-1resolute.20260606.033310           amd64        C++ stdlib-compatible wrapper around tlsf allocator and ROS2 examples
+ii  ros-lyrical-topic-monitor                          0.37.8-3resolute.20260606.025012           amd64        Package containing tools for monitoring ROS 2 topics.
+ii  ros-lyrical-tracetools                             8.10.2-1resolute.20260430.205501           amd64        Tracing wrapper for ROS 2.
+ii  ros-lyrical-tracetools-image-pipeline              7.1.6-1resolute.20260606.020303            amd64        LTTng tracing provider wrapper for image_pipeline ROS 2 meta-package.
+ii  ros-lyrical-trajectory-msgs                        5.9.2-3resolute.20260606.010326            amd64        A package containing some robot trajectory message definitions.
+ii  ros-lyrical-turtlesim                              1.10.9-1resolute.20260606.024128           amd64        turtlesim is a tool made for teaching ROS and ROS packages.
+ii  ros-lyrical-turtlesim-msgs                         1.10.9-1resolute.20260606.000913           amd64        turtlesim messages.
+ii  ros-lyrical-type-description-interfaces            2.4.5-1resolute.20260605.190922            amd64        A package containing message and service definitions for describing and communicating descriptions of other types.
+ii  ros-lyrical-uncrustify-vendor                      3.2.0-3resolute.20260430.013712            amd64        Wrapper around uncrustify, providing nothing but a dependency on uncrustify, on some systems.
+ii  ros-lyrical-unique-identifier-msgs                 2.8.1-3resolute.20260605.174410            amd64        ROS messages for universally unique identifiers.
+ii  ros-lyrical-urdf                                   2.13.2-3resolute.20260606.021613           amd64        This package contains a C++ parser for the Unified Robot Description Format (URDF), which is an XML format for representing a robot model.
+ii  ros-lyrical-urdf-parser-plugin                     2.13.2-3resolute.20260606.020332           amd64        This package contains a C++ base class for URDF parsers.
+ii  ros-lyrical-urdfdom                                6.0.0-3resolute.20260430.013711            amd64        A library to access URDFs using the DOM model.
+ii  ros-lyrical-urdfdom-headers                        3.0.0-3resolute.20260430.011133            amd64        C++ headers for URDF.
+ii  ros-lyrical-v4l2-camera                            0.8.0-3resolute.20260609.071352            amd64        A ROS 2 camera driver using Video4Linux2
+ii  ros-lyrical-vision-msgs                            4.2.0-3resolute.20260606.010612            amd64        Messages for interfacing with various computer vision pipelines, such as object detectors.
+ii  ros-lyrical-vision-opencv                          4.1.0-3resolute.20260606.032522            amd64        Packages for interfacing ROS2 with OpenCV, a library of programming functions for real time computer vision.
+ii  ros-lyrical-visualization-msgs                     5.9.2-3resolute.20260606.012547            amd64        A package containing some visualization and interaction related message definitions.
+ii  ros-lyrical-xacro                                  2.1.1-3resolute.20260430.013741            amd64        Xacro (XML Macros) Xacro is an XML macro language.
+ii  ros-lyrical-yaml-cpp-vendor                        9.2.1-3resolute.20260430.013745            amd64        Wrapper around yaml-cpp, it provides a fixed CMake module and an ExternalProject build of it.
+ii  ros-lyrical-zenoh-cpp-vendor                       0.10.4-1resolute.20260430.104756           amd64        Vendor pkg to install zenoh-cpp
+ii  ros-lyrical-zstd-cmake-module                      0.33.3-1resolute.20260512.193944           amd64        ZSTD compression cmake module package
+ii  ros-lyrical-zstd-image-transport                   6.2.5-1resolute.20260609.005630            amd64        zstd_image_transport provides a plugin to image_transport for transparently sending images encoded as zstd blobs

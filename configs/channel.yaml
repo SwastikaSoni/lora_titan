@@ -1,0 +1,49 @@
+# LoRa channel model constants for the log-distance + log-normal
+# shadowing pathloss formula:
+#
+#   PL(d) = PL(d0) + 10 * n * log10(d/d0) + X_sigma
+#
+# where X_sigma ~ N(0, sigma^2). Loaded via ChannelModel.from_preset.
+#
+# The "real" operating constants for the Titan mesh come from the
+# Weeks 3-4 bake-off sensitivity study (README §8). Entries below are
+# starting points, not final values.
+
+models:
+
+  # Friis free-space at 915 MHz — a hand-verifiable baseline.
+  # lambda = c/f = 0.3276 m; PL0(1m) = 20 log10(4pi/lambda) = 31.676 dB.
+  # n = 2 by definition of free space; no shadowing.
+  free_space_915mhz:
+    path_loss_exponent: 2.0
+    reference_distance_m: 1.0
+    reference_pathloss_db: 31.676
+    shadowing_std_db: 0.0
+
+  # Outdoor suburban approximation, plausible for the paper's UDM
+  # campus test environment. Path-loss exponent between free space
+  # and dense urban; moderate shadowing.
+  # Cite (form): J. Petajajarvi et al., "On the coverage of LPWANs:
+  # Range evaluation and channel attenuation model for LoRa
+  # technology," Proc. IEEE ITST, Copenhagen, Dec. 2015.
+  outdoor_suburban:
+    path_loss_exponent: 2.65
+    reference_distance_m: 1.0
+    reference_pathloss_db: 40.0
+    shadowing_std_db: 7.8
+
+  # Urban NLOS-heavy — the "high obstruction" corner of the mesh
+  # routing sweep (README §5).
+  urban_nlos:
+    path_loss_exponent: 3.5
+    reference_distance_m: 1.0
+    reference_pathloss_db: 40.0
+    shadowing_std_db: 10.0
+
+  # Rural / open field — the "clean line-of-sight" comparison
+  # point for the bake-off.
+  rural_los:
+    path_loss_exponent: 2.32
+    reference_distance_m: 1.0
+    reference_pathloss_db: 40.0
+    shadowing_std_db: 4.0

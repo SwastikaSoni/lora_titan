@@ -1,0 +1,5 @@
+ii  ros-lyrical-gz-msgs-vendor                         0.3.3-3resolute.20260610.200130            amd64        Vendor package for: gz-msgs 12.0.1 Gazebo Messages: Protobuf messages and functions for robot applications
+ii  ros-lyrical-gz-sim-vendor                          0.4.5-1resolute.20260610.204226            amd64        Vendor package for: gz-sim 10.4.0 Gazebo Sim : A Robotic Simulator
+ii  ros-lyrical-gz-transport-vendor                    0.3.4-3resolute.20260610.200959            amd64        Vendor package for: gz-transport 15.0.2 Gazebo Transport: Provides fast and efficient asynchronous message passing, services, and data logging.
+ii  ros-lyrical-ros-gz-sim                             3.0.9-1resolute.20260610.213303            amd64        Tools for using Gazebo Sim simulation with ROS.
+ii  ros-lyrical-ros-gz-sim-demos                       3.0.9-1resolute.20260617.152947            amd64        Demos using Gazebo Sim simulation with ROS.
