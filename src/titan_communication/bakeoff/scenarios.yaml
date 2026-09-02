@@ -1,0 +1,178 @@
+
+# --- Simulation parameters ---
+sim_duration_s: 120          # simulated seconds per run
+tick_interval_s: 1.0         # routing on_tick period
+warmup_s: 10                 # ignore first N seconds in metrics
+                             # (let gradient beacons converge, AODV
+                             #  discover routes, flood fill caches)
+
+seeds:
+  count: 20                  # N independent runs per cell
+  start: 1                   # first seed value (1..20)
+
+# --- LoRa PHY (fixed — matches paper §III-B, Algorithm 2) ---
+lora:
+  spreading_factor: 10
+  bandwidth_hz: 500000
+  coding_rate: "4/5"
+  preamble_symbols: 8
+  explicit_header: true
+  crc_on: true
+  tx_power_dbm: 15.0
+
+# --- MAC channel access ---
+mac:
+  backoff_max_s: 0.1          # random pre-TX backoff, drawn from [0, this)
+                               # Without this, nodes that react to the same
+                               # received broadcast in the same simulated
+                               # instant (e.g. AODV's destination replying
+                               # with RREP while its other neighbours
+                               # simultaneously rebroadcast the same RREQ)
+                               # transmit at the identical timestamp and
+                               # collide deterministically, every time.
+
+# --- Duty-cycle policy ---
+duty:
+  policy: "us915_polite"     # 10% self-imposed cap
+
+# --- Channel model (base — before extra_obstruction_db) ---
+channel:
+  path_loss_exponent: 2.7    # Petäjäjärvi 2015, suburban NLOS
+  reference_distance_m: 1.0
+  reference_pathloss_db: 40.6
+  shadowing_std_db: 7.8      # Petäjäjärvi 2015
+
+# --- Sweep axes (cartesian product) ---
+sweep:
+
+  n_nodes: [5, 7, 10]
+
+  traffic_mix:
+    - name: "telem_only"
+      # All traffic is periodic telemetry
+      classes:
+        TELEM: 1.0
+
+    - name: "mixed"
+      # Realistic SAR mix: mostly telem, some control, occasional SOS
+      classes:
+        SOS:   0.05
+        CTRL:  0.15
+        TELEM: 0.50
+        AUDIO: 0.20
+        BULK:  0.10
+
+    - name: "sos_burst"
+      # Stress test: heavy SOS + control (multiple victims found)
+      classes:
+        SOS:   0.40
+        CTRL:  0.30
+        TELEM: 0.20
+        AUDIO: 0.10
+        BULK:  0.00
+
+  mobility_m_per_s: [0.0, 1.0, 3.0]
+  #  0.0 = static (pure channel test)
+  #  1.0 = slow walk / careful robot traverse
+  #  3.0 = fast robot or vehicle
+
+  extra_obstruction_db: [0, 10, 20]
+  #  Added to the base pathloss model. Simulates:
+  #    0  = open outdoor (Region 2)
+  #   10  = moderate rubble/walls (Region 2/3 boundary)
+  #   20  = heavy obstruction (deep Region 3, inside collapsed structure)
+
+  offered_load_pkts_per_min_per_node: [10, 50, 200]
+  #   10 = light (1 pkt every 6 s per node)
+  #   50 = moderate (1 pkt every 1.2 s per node)
+  #  200 = heavy (3.3 pkts/s per node — stress test, will saturate)
+
+  spacing_m: [250, 800]
+  #  250 = dense deployment. At this spacing every node is within radio
+  #        range of every other node at extra_obstruction_db=0 (measured
+  #        ~99-100% link decodability even at n_nodes=10), so the chain
+  #        never actually forces multi-hop relaying at low obstruction —
+  #        it behaves like a star. Kept for continuity with the original
+  #        sweep.
+  #  800 = sparse deployment. Adjacent hops stay reliable (~100% decodable
+  #        at obs=0) but direct robot-to-BS delivery for the far end of
+  #        the chain drops to ~35-76% decodable even at obs=0, so relaying
+  #        is actually exercised regardless of obstruction level.
+
+  bs_role:
+    - name: "mesh_participant"
+      # BS is a regular mesh node: relays, has a routing table
+      is_sink_only: false
+
+    - name: "designated_sink"
+      # BS only receives, never relays for others
+      is_sink_only: true
+
+# --- Routing schemes to compare ---
+schemes:
+  - name: "flood"
+    module: "titan_communication.mesh.routing_flood"
+    class: "FloodRouting"
+    config:
+      default_ttl: 5
+      dedup_cache_size: 256
+      dedup_expiry_s: 30.0
+      neighbour_timeout: 30.0
+
+  - name: "aodv"
+    module: "titan_communication.mesh.routing_aodv"
+    class: "AodvRouting"
+    config:
+      default_ttl: 5
+      route_timeout_s: 60.0
+      rreq_retry_s: 5.0
+      rreq_max_retries: 3
+      dedup_cache_size: 256
+      dedup_expiry_s: 30.0
+      neighbour_timeout: 30.0
+      pending_buf_size: 16
+
+  - name: "gradient"
+    module: "titan_communication.mesh.routing_gradient"
+    class: "GradientRouting"
+    config:
+      default_ttl: 5
+      beacon_interval_s: 5.0
+      route_timeout_s: 30.0
+      neighbour_timeout: 30.0
+      dedup_cache_size: 256
+      dedup_expiry_s: 30.0
+
+# --- Topology layout ---
+# spacing_m is swept (see sweep.spacing_m above), not fixed here.
+topology:
+  layout: "linear_chain"
+
+# --- Decision rule (committed before seeing results) ---
+decision_rule:
+  description: >
+    Pick the scheme with the highest PDR in the cell:
+    extra_obstruction_db=10, traffic_mix=mixed, mobility=1.0,
+    n_nodes=7, offered_load=50, bs_role=mesh_participant.
+    Tiebreak: lower control overhead (bytes of CTRL frames /
+    bytes of data frames). Second tiebreak: lower P95 latency.
+  primary_metric: "pdr"
+  primary_cell:
+    extra_obstruction_db: 10
+    traffic_mix: "mixed"
+    mobility_m_per_s: 1.0
+    n_nodes: 7
+    offered_load_pkts_per_min_per_node: 50
+    bs_role: "mesh_participant"
+    spacing_m: 250   # the original (dense/fully-connected) deployment —
+                     # kept as the decision cell for continuity with the
+                     # cell committed before seeing results. spacing_m=800
+                     # (genuinely multi-hop) is now also collected but is
+                     # not part of the pre-committed decision.
+  tiebreak_1: "control_overhead_ratio"
+  tiebreak_2: "latency_p95_ms"
+
+# --- Output ---
+output:
+  results_dir: "src/titan_communication/bakeoff/results"
+  results_file: "bakeoff_results.csv"
