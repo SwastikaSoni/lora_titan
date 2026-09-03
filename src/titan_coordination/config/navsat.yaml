@@ -1,0 +1,69 @@
+# ═══════════════════════════════════════════════════════════════
+# navsat_transform configuration
+#
+# This node does ONE job:
+#   GPS lat/lon (sensor_msgs/NavSatFix on /gps/fix)
+#     → local XY meters (nav_msgs/Odometry on /odometry/gps)
+#
+# It figures out the transform by combining:
+#   - The first GPS fix it receives (sets the origin)
+#   - The current orientation from the IMU
+#   - The current odometry from the EKF
+#
+# After initialization, every new GPS fix is converted to
+# a local-frame position offset from that origin.
+# ═══════════════════════════════════════════════════════════════
+
+/**:
+  ros__parameters:
+    use_sim_time: true
+
+    # ros_gz_bridge publishes sensor topics as BEST_EFFORT; this node's
+    # default subscriber QoS is RELIABLE. Override so the subscriptions
+    # actually connect (see the same note in ekf.yaml).
+    qos_overrides:
+      /imu/data:
+        subscription:
+          reliability: best_effort
+      /gps/fix:
+        subscription:
+          reliability: best_effort
+
+    # ── Input topics ──
+
+    # GPS data (lat/lon/alt from Gazebo NavSat sensor, bridged to ROS 2)
+    # magnetic_declination_radians: offset between magnetic north and true north.
+    # Detroit MI is approximately -8.5° = -0.1484 rad (NOAA calculator).
+    # In sim this mostly doesn't matter, but good practice.
+    magnetic_declination_radians: -0.1484
+
+    # Yaw offset: rotation between the IMU's yaw=0 direction and east.
+    # ENU convention: yaw=0 = east, yaw=pi/2 = north.
+    # If the IMU reports yaw=0 when facing east, this is 0.
+    # If the IMU reports yaw=0 when facing north, this is pi/2.
+    # Gazebo Ionic IMU in ENU mode: yaw=0 = east. So offset = 0.
+    yaw_offset: 0.0
+
+    # Wait for a valid datum (first GPS fix) before publishing.
+    wait_for_datum: false
+
+    # Broadcast the utm → map TF transform.
+    # This connects the global UTM frame to the local map frame.
+    broadcast_utm_transform: true
+    broadcast_utm_transform_as_parent_frame: true
+
+    # ── Frame configuration ──
+    # Must match ekf.yaml — these default to plain "base_link"/"odom" if
+    # unset, which don't exist in this TF tree. The world file's model
+    # instance is named "husky" (see ekf.yaml's note), so wheel odom and
+    # the IMU publish under "husky/..." frames, not bare ones.
+    base_link_frame_id: husky/base_link
+    world_frame_id: husky/odom
+    frequency: 5.0  # match GPS update rate
+    delay: 0.0
+
+    # Zero altitude — we're on flat ground, GPS altitude is noisy
+    zero_altitude: true
+
+    # Publish the transform between odom and map frames
+    publish_filtered_gps: true

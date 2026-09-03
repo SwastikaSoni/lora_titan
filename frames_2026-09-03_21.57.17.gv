@@ -1,0 +1,12 @@
+digraph G {
+"husky/odom" -> "utm"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"husky/odom" -> "husky/base_link"[label=" Broadcaster: default_authority\nAverage rate: 50.202\nBuffer length: 4.94\nMost recent transform: 112.5\nOldest transform: 107.56\n"];
+"husky/base_link" -> "camera_link"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"husky/base_link" -> "husky/base_link/imu_sensor"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"husky/base_link" -> "husky/base_link/navsat_sensor"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"husky/base_link" -> "lidar_link"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1788452837.6020265"[ shape=plaintext ] ;
+}->"husky/odom";
+}

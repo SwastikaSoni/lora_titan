@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <world name="phase1_region2_open">
+
+    <!-- ══════════════════════════════════════════════════════════
+         SYSTEM PLUGINS
+         These run the simulation engine. Without them, nothing works.
+         ══════════════════════════════════════════════════════════ -->
+
+    <!-- Physics engine — computes gravity, collisions, forces every timestep -->
+    <plugin filename="gz-sim-physics-system"
+            name="gz::sim::systems::Physics">
+    </plugin>
+
+    <!-- Lets you spawn/delete models from the GUI or command line -->
+    <plugin filename="gz-sim-user-commands-system"
+            name="gz::sim::systems::UserCommands">
+    </plugin>
+
+    <!-- Sends the 3D scene to the Gazebo GUI so you can see it -->
+    <plugin filename="gz-sim-scene-broadcaster-system"
+            name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+
+    <!--
+      SENSORS — CRITICAL
+      Without this plugin, lidar/camera/IMU/GPS sensors exist on
+      the robot but produce NO data. This is the #1 gotcha in Gazebo Ionic.
+      render_engine: ogre2 is the default and only GPU renderer.
+    -->
+    <plugin filename="gz-sim-sensors-system"
+            name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <!--
+      IMU system — required for IMU sensors to publish data.
+      Separate from the Sensors plugin (which handles rendering sensors).
+    -->
+    <plugin filename="gz-sim-imu-system"
+            name="gz::sim::systems::Imu">
+    </plugin>
+
+    <!--
+      NavSat (GPS) system — sets the world origin in lat/lon coordinates.
+      We use the paper's Table I starting location at U. of Detroit Mercy
+      campus as our origin. This means world position (0,0,0) = this GPS point.
+
+      Any robot's NavSat sensor will report lat/lon relative to this origin.
+    -->
+    <plugin filename="gz-sim-navsat-system"
+            name="gz::sim::systems::NavSat">
+    </plugin>
+
+    <!-- Contact system — detects physical contacts between objects -->
+    <plugin filename="gz-sim-contact-system"
+            name="gz::sim::systems::Contact">
+    </plugin>
+
+    <!-- ══════════════════════════════════════════════════════════
+         WORLD SETTINGS
+         ══════════════════════════════════════════════════════════ -->
+
+    <!-- Gravity: 9.8 m/s² downward (Earth standard) -->
+    <gravity>0 0 -9.8</gravity>
+
+    <!-- Magnetic field (for IMU magnetometer, approximate for Detroit MI) -->
+    <magnetic_field>5.5645e-6 2.28758e-5 -4.23884e-5</magnetic_field>
+
+    <!--
+      GPS origin — world frame (0,0,0) maps to this lat/lon/alt.
+      Coordinates from paper Table I: starting location at Detroit Mercy.
+      Latitude:  42.4129540624
+      Longitude: -83.1360653105
+      Altitude:  190 m (approximate Detroit elevation)
+    -->
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <world_frame_orientation>ENU</world_frame_orientation>
+      <latitude_deg>42.4129540624</latitude_deg>
+      <longitude_deg>-83.1360653105</longitude_deg>
+      <elevation>190.0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+
+    <!-- Physics timestep: 1ms = 1000 Hz. Standard for ground robots. -->
+    <physics name="1ms" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SCENE — lighting and sky
+         ══════════════════════════════════════════════════════════ -->
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.85 1.0 1</background>  <!-- light blue sky -->
+      <shadows>true</shadows>
+    </scene>
+
+    <!-- Sun: directional light from above-left, casts shadows -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 100 0 0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- ══════════════════════════════════════════════════════════
+         GROUND PLANE
+         A large flat surface. 200×200 m to match the approximate
+         scale of the paper's Region 2 test area.
+         ══════════════════════════════════════════════════════════ -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>  <!-- Z-up -->
+              <size>200 200</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>200 200</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.45 0.55 0.35 1</ambient>
+            <diffuse>0.45 0.55 0.35 1</diffuse>  <!-- olive green, like grass -->
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ROBOT
+         Include the leader robot at a starting position.
+         The robot spawns 0.3m above ground so it drops and settles.
+         ══════════════════════════════════════════════════════════ -->
+    <include>
+      <uri>model://husky_leader</uri>
+      <name>husky</name>
+      <pose>0 0 0.3 0 0 0</pose>
+    </include>
+
+  </world>
+</sdf>

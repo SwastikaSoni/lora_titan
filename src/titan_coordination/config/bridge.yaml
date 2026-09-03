@@ -1,0 +1,82 @@
+# ros_gz_bridge topic mapping configuration
+# Docs: https://github.com/gazebosim/ros_gz/tree/ros2/ros_gz_bridge
+#
+# Each entry maps a Gazebo topic to a ROS 2 topic.
+# direction: GZ_TO_ROS  = sensor data flowing out of Gazebo
+#            ROS_TO_GZ  = commands flowing into Gazebo
+#            BIDIRECTIONAL = both ways
+
+# ── Clock ──
+# Syncs ROS 2 time with Gazebo sim time.
+# Every ROS 2 node must set use_sim_time:=true for this to work.
+- topic_name: "/clock"
+  ros_type_name: "rosgraph_msgs/msg/Clock"
+  gz_type_name: "gz.msgs.Clock"
+  direction: GZ_TO_ROS
+
+# ── Drive commands ──
+# Your teleop or FISVFH node publishes Twist on /cmd_vel in ROS 2.
+# Bridge converts it to gz.msgs.Twist and sends to the DiffDrive plugin.
+#
+# NOTE: The gz topic includes the model name. The ros_gz_bridge
+# remaps it so your ROS nodes just use /cmd_vel.
+- topic_name: "/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  direction: ROS_TO_GZ
+
+# ── Wheel odometry ──
+# DiffDrive plugin publishes odom (position/velocity from wheel rotation).
+# This goes into the EKF as one of the sensor inputs.
+- topic_name: "/odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "gz.msgs.Odometry"
+  direction: GZ_TO_ROS
+
+# ── Joint states ──
+# Wheel joint positions + velocities.
+# robot_state_publisher needs this to compute TF for wheel frames.
+- topic_name: "/joint_states"
+  ros_type_name: "sensor_msgs/msg/JointState"
+  gz_type_name: "gz.msgs.Model"
+  direction: GZ_TO_ROS
+
+# ── IMU ──
+# Orientation, angular velocity, linear acceleration.
+# Goes into the EKF for heading estimation.
+- topic_name: "/imu/data"
+  ros_type_name: "sensor_msgs/msg/Imu"
+  gz_type_name: "gz.msgs.IMU"
+  direction: GZ_TO_ROS
+
+# ── GPS (NavSat) ──
+# Global lat/lon/alt position.
+# Goes into navsat_transform → EKF.
+#
+# NOTE: gz-side and ros-side names differ, so they're split explicitly.
+# The navsat sensor in husky_leader/model.sdf advertises on gz topic
+# "navsat" (its <topic> element) — NOT "/gps/fix". A single `topic_name`
+# here would apply "/gps/fix" to both sides and the bridge would
+# subscribe to a gz topic nothing publishes on (silently no data, no
+# error). Verified with `gz topic -i -t /navsat` / `-t /gps/fix`.
+- ros_topic_name: "/gps/fix"
+  gz_topic_name: "/navsat"
+  ros_type_name: "sensor_msgs/msg/NavSatFix"
+  gz_type_name: "gz.msgs.NavSat"
+  direction: GZ_TO_ROS
+
+# ── 2D Lidar ──
+# 360° laser scan for obstacle detection.
+# FISVFH reads this to build the VFH histogram.
+- topic_name: "/scan"
+  ros_type_name: "sensor_msgs/msg/LaserScan"
+  gz_type_name: "gz.msgs.LaserScan"
+  direction: GZ_TO_ROS
+
+# ── Camera ──
+# Front-facing camera image.
+# Used by coordination (Week 7-8) for fiducial detection.
+- topic_name: "/camera/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: GZ_TO_ROS

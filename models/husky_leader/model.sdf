@@ -1,0 +1,470 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <model name="husky_leader">
+
+    <!--
+      static = false means physics applies (gravity, collisions, forces).
+      If true, the robot would float in place and ignore cmd_vel.
+    -->
+    <static>false</static>
+
+    <!-- ══════════════════════════════════════════════════════════
+         LINK: CHASSIS
+         The main body of the robot. Everything else attaches to this.
+         ══════════════════════════════════════════════════════════ -->
+    <link name="base_link">
+      <!--
+        Inertial: mass + moment of inertia. Gazebo needs this for physics.
+        A real Husky is ~50 kg. The inertia values are for a uniform box
+        of size 0.99 x 0.67 x 0.39 m at 50 kg.
+        Formula: Ixx = m/12 * (y^2 + z^2), etc.
+      -->
+      <inertial>
+        <mass>50.0</mass>
+        <inertia>
+          <ixx>1.0417</ixx>   <!-- 50/12 * (0.67^2 + 0.39^2) -->
+          <iyy>1.5042</iyy>   <!-- 50/12 * (0.99^2 + 0.39^2) -->
+          <izz>2.1042</izz>   <!-- 50/12 * (0.99^2 + 0.67^2) -->
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+
+      <!--
+        Collision: the shape Gazebo uses to detect contacts.
+        Simpler than visual — a box is fine for a rectangular robot.
+      -->
+      <collision name="chassis_collision">
+        <geometry>
+          <box><size>0.99 0.67 0.20</size></box>
+        </geometry>
+      </collision>
+
+      <!--
+        Visual: what you SEE in Gazebo. Can be more detailed than collision.
+        For now, same box shape. Color is set via <material>.
+      -->
+      <visual name="chassis_visual">
+        <geometry>
+          <box><size>0.99 0.67 0.20</size></box>
+        </geometry>
+        <material>
+          <ambient>0.2 0.2 0.2 1</ambient>
+          <diffuse>0.3 0.3 0.3 1</diffuse>  <!-- dark grey, like a real Husky -->
+        </material>
+      </visual>
+
+      <!-- ────────────────────────────────────────────
+           SENSOR: IMU (on the chassis)
+           Measures orientation, angular velocity, linear acceleration.
+           Published to /imu/data by gz-sim's Imu system plugin.
+           robot_localization EKF fuses this for heading + tilt.
+           ──────────────────────────────────────────── -->
+      <sensor name="imu_sensor" type="imu">
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>  <!-- 100 Hz, typical for IMU -->
+        <topic>imu/data</topic>
+        <imu>
+          <angular_velocity>
+            <x><noise type="gaussian"><mean>0</mean><stddev>0.001</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0</mean><stddev>0.001</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0</mean><stddev>0.001</stddev></noise></z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x><noise type="gaussian"><mean>0</mean><stddev>0.01</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0</mean><stddev>0.01</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0</mean><stddev>0.01</stddev></noise></z>
+          </linear_acceleration>
+        </imu>
+      </sensor>
+
+      <!-- ────────────────────────────────────────────
+           SENSOR: GPS (NavSat)
+           Gives global lat/lon/alt. The paper uses GPS for all
+           navigation targets (Table I, Table II, Table III).
+           Published to /navsat topic.
+           ──────────────────────────────────────────── -->
+      <sensor name="navsat_sensor" type="navsat">
+        <always_on>true</always_on>
+        <update_rate>5</update_rate>  <!-- 5 Hz, typical for GPS modules -->
+        <topic>navsat</topic>
+        <navsat>
+          <position_sensing>
+            <horizontal>
+              <!-- Noise here is applied directly to lat/lon (degrees), not meters.
+                   0.5 m of real-world GPS error ≈ 0.5 / 111320 deg ≈ 0.0000045 deg. -->
+              <noise type="gaussian"><mean>0</mean><stddev>0.0000045</stddev></noise>
+            </horizontal>
+            <vertical>
+              <!-- Altitude stays in meters, so 1.0 m stddev is fine as-is. -->
+              <noise type="gaussian"><mean>0</mean><stddev>1.0</stddev></noise>
+            </vertical>
+          </position_sensing>
+        </navsat>
+      </sensor>
+
+    </link>
+
+    <!-- ══════════════════════════════════════════════════════════
+         LINK: LIDAR MOUNT
+         A small post on top of the chassis that holds the 2D lidar.
+         Separated so the lidar scan plane is above the chassis,
+         not blocked by the robot's own body.
+         ══════════════════════════════════════════════════════════ -->
+    <link name="lidar_link">
+      <pose relative_to="base_link">0 0 0.20 0 0 0</pose>
+      <!-- x y z  roll pitch yaw — 0.20m above chassis center -->
+
+      <inertial>
+        <mass>0.5</mass>
+        <inertia>
+          <ixx>0.001</ixx><iyy>0.001</iyy><izz>0.001</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+
+      <collision name="lidar_collision">
+        <geometry><cylinder><radius>0.05</radius><length>0.05</length></cylinder></geometry>
+      </collision>
+
+      <visual name="lidar_visual">
+        <geometry><cylinder><radius>0.05</radius><length>0.05</length></cylinder></geometry>
+        <material>
+          <ambient>0.0 0.0 0.8 1</ambient>
+          <diffuse>0.0 0.0 0.8 1</diffuse>  <!-- blue cylinder -->
+        </material>
+      </visual>
+
+      <!-- ────────────────────────────────────────────
+           SENSOR: 2D LIDAR (gpu_lidar in Gazebo Ionic)
+           360° scan, 10 Hz, 30 m range.
+           FISVFH (Week 6) reads this to build the VFH obstacle histogram.
+           The paper's robots use lidar for obstacle avoidance (§III-C).
+           ──────────────────────────────────────────── -->
+      <sensor name="lidar_sensor" type="gpu_lidar">
+        <always_on>true</always_on>
+        <update_rate>10</update_rate>  <!-- 10 Hz scan rate -->
+        <topic>scan</topic>
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>360</samples>        <!-- one ray per degree -->
+              <resolution>1</resolution>
+              <min_angle>-3.14159</min_angle>  <!-- -180° -->
+              <max_angle>3.14159</max_angle>   <!-- +180° -->
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.15</min>   <!-- ignore anything closer than 15 cm -->
+            <max>30.0</max>   <!-- 30 m max range -->
+            <resolution>0.01</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </lidar>
+      </sensor>
+
+    </link>
+
+    <!-- Fixed joint: bolt the lidar mount to the chassis -->
+    <joint name="lidar_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>lidar_link</child>
+    </joint>
+
+    <!-- ══════════════════════════════════════════════════════════
+         LINK: CAMERA MOUNT
+         Front-facing camera for fiducial (QR code) detection.
+         In the paper, followers track a QR code on the leader's back
+         (Fig. 6). In sim, we'll use a fiducial marker pose instead of
+         real ArUco, but the camera sensor is still needed.
+         ══════════════════════════════════════════════════════════ -->
+    <link name="camera_link">
+      <!-- Mounted at front of chassis, looking forward -->
+      <pose relative_to="base_link">0.49 0 0.15 0 0 0</pose>
+
+      <inertial>
+        <mass>0.2</mass>
+        <inertia>
+          <ixx>0.0001</ixx><iyy>0.0001</iyy><izz>0.0001</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+
+      <collision name="camera_collision">
+        <geometry><box><size>0.04 0.08 0.04</size></box></geometry>
+      </collision>
+
+      <visual name="camera_visual">
+        <geometry><box><size>0.04 0.08 0.04</size></box></geometry>
+        <material>
+          <ambient>0.8 0.0 0.0 1</ambient>
+          <diffuse>0.8 0.0 0.0 1</diffuse>  <!-- red box -->
+        </material>
+      </visual>
+
+      <!-- ────────────────────────────────────────────
+           SENSOR: CAMERA
+           640x480, 30 fps, 80° horizontal FOV.
+           Used by coordination (Week 7-8) for fiducial tracking.
+           ──────────────────────────────────────────── -->
+      <sensor name="camera_sensor" type="camera">
+        <always_on>true</always_on>
+        <update_rate>30</update_rate>
+        <topic>camera/image</topic>
+        <camera>
+          <horizontal_fov>1.3962634</horizontal_fov>  <!-- ~80° -->
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.1</near>
+            <far>100.0</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0</mean>
+            <stddev>0.005</stddev>
+          </noise>
+        </camera>
+      </sensor>
+
+    </link>
+
+    <joint name="camera_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>camera_link</child>
+    </joint>
+
+    <!-- ══════════════════════════════════════════════════════════
+         WHEELS
+         4 wheels: front_left, front_right, rear_left, rear_right.
+         Husky wheel: radius ~0.17 m, width ~0.08 m.
+         Wheelbase (left-right distance): 0.555 m center-to-center.
+         Wheel separation from front to rear: 0.512 m.
+
+         The DiffDrive plugin pairs left wheels together and right
+         wheels together — all left wheels spin at the same speed,
+         all right wheels spin at the same speed. Turning = speed
+         difference between left and right sides (skid-steer).
+         ══════════════════════════════════════════════════════════ -->
+
+    <!-- ── FRONT LEFT WHEEL ── -->
+    <link name="front_left_wheel">
+      <!--
+        Position: x=+0.256 (front), y=+0.2775 (left), z=-0.1 (below chassis)
+        Rotation: roll 90° so the cylinder lies on its side as a wheel
+        (cylinders are vertical by default in SDF)
+      -->
+      <pose relative_to="base_link">0.256 0.2855 -0.1 -1.5708 0 0</pose>
+
+      <inertial>
+        <mass>2.5</mass>
+        <inertia>
+          <ixx>0.0073</ixx><iyy>0.0073</iyy><izz>0.0036</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+
+      <collision name="collision">
+        <geometry><cylinder><radius>0.17</radius><length>0.08</length></cylinder></geometry>
+        <surface>
+          <friction>
+            <ode><mu>1.0</mu><mu2>0.5</mu2></ode>
+          </friction>
+        </surface>
+      </collision>
+
+      <visual name="visual">
+        <geometry><cylinder><radius>0.17</radius><length>0.08</length></cylinder></geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>  <!-- black wheels -->
+        </material>
+      </visual>
+    </link>
+
+    <joint name="front_left_wheel_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>front_left_wheel</child>
+      <axis>
+        <xyz>0 0 1</xyz>  <!-- rotation axis: Z in wheel frame = Y in world (because of the roll) -->
+        <limit><lower>-1e16</lower><upper>1e16</upper></limit>  <!-- unlimited rotation -->
+      </axis>
+    </joint>
+
+    <!-- ── FRONT RIGHT WHEEL ── -->
+    <link name="front_right_wheel">
+      <pose relative_to="base_link">0.256 -0.2855 -0.1 -1.5708 0 0</pose>
+
+      <inertial>
+        <mass>2.5</mass>
+        <inertia>
+          <ixx>0.0073</ixx><iyy>0.0073</iyy><izz>0.0036</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+
+      <collision name="collision">
+        <geometry><cylinder><radius>0.17</radius><length>0.08</length></cylinder></geometry>
+        <surface>
+          <friction>
+            <ode><mu>1.0</mu><mu2>0.5</mu2></ode>
+          </friction>
+        </surface>
+      </collision>
+
+      <visual name="visual">
+        <geometry><cylinder><radius>0.17</radius><length>0.08</length></cylinder></geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <joint name="front_right_wheel_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>front_right_wheel</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit><lower>-1e16</lower><upper>1e16</upper></limit>
+      </axis>
+    </joint>
+
+    <!-- ── REAR LEFT WHEEL ── -->
+    <link name="rear_left_wheel">
+      <pose relative_to="base_link">-0.256 0.2855 -0.1 -1.5708 0 0</pose>
+
+      <inertial>
+        <mass>2.5</mass>
+        <inertia>
+          <ixx>0.0073</ixx><iyy>0.0073</iyy><izz>0.0036</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+
+      <collision name="collision">
+        <geometry><cylinder><radius>0.17</radius><length>0.08</length></cylinder></geometry>
+        <surface>
+          <friction>
+            <ode><mu>1.0</mu><mu2>0.5</mu2></ode>
+          </friction>
+        </surface>
+      </collision>
+
+      <visual name="visual">
+        <geometry><cylinder><radius>0.17</radius><length>0.08</length></cylinder></geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <joint name="rear_left_wheel_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>rear_left_wheel</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit><lower>-1e16</lower><upper>1e16</upper></limit>
+      </axis>
+    </joint>
+
+    <!-- ── REAR RIGHT WHEEL ── -->
+    <link name="rear_right_wheel">
+      <pose relative_to="base_link">-0.256 -0.2855 -0.1 -1.5708 0 0</pose>
+
+      <inertial>
+        <mass>2.5</mass>
+        <inertia>
+          <ixx>0.0073</ixx><iyy>0.0073</iyy><izz>0.0036</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+
+      <collision name="collision">
+        <geometry><cylinder><radius>0.17</radius><length>0.08</length></cylinder></geometry>
+        <surface>
+          <friction>
+            <ode><mu>1.0</mu><mu2>0.5</mu2></ode>
+          </friction>
+        </surface>
+      </collision>
+
+      <visual name="visual">
+        <geometry><cylinder><radius>0.17</radius><length>0.08</length></cylinder></geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <joint name="rear_right_wheel_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>rear_right_wheel</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit><lower>-1e16</lower><upper>1e16</upper></limit>
+      </axis>
+    </joint>
+
+    <!-- ══════════════════════════════════════════════════════════
+         PLUGINS
+         These are Gazebo Ionic system plugins that make things work.
+         Without them, the sensors don't publish and the wheels don't turn.
+         ══════════════════════════════════════════════════════════ -->
+
+    <!--
+      DiffDrive: reads Twist messages on <topic>, spins the wheels.
+      left_joint + right_joint: which joints to drive.
+      wheel_separation: distance between left and right wheel centers.
+      wheel_radius: wheel radius.
+      odom_topic: publishes odometry (position from wheel rotation).
+      tf_topic: publishes the base_link → odom transform.
+
+      topic is set explicitly to "cmd_vel". NOTE: an explicit <topic> is
+      used LITERALLY (unscoped) — it does NOT get namespaced under
+      /model/<include-name>/ the way the plugin's default (no <topic> at
+      all) does. So this model always listens on plain /cmd_vel,
+      regardless of what name the world's <include> gives it. Verified
+      with `gz topic -i -t /cmd_vel` showing the DiffDrive subscriber.
+    -->
+    <plugin filename="gz-sim-diff-drive-system"
+            name="gz::sim::systems::DiffDrive">
+      <left_joint>front_left_wheel_joint</left_joint>
+      <left_joint>rear_left_wheel_joint</left_joint>
+      <right_joint>front_right_wheel_joint</right_joint>
+      <right_joint>rear_right_wheel_joint</right_joint>
+      <wheel_separation>0.571</wheel_separation>
+      <wheel_radius>0.17</wheel_radius>
+      <max_linear_acceleration>1.0</max_linear_acceleration>
+      <max_angular_acceleration>2.0</max_angular_acceleration>
+      <max_linear_velocity>2.0</max_linear_velocity>
+      <min_linear_velocity>-2.0</min_linear_velocity>
+      <max_angular_velocity>2.0</max_angular_velocity>
+      <min_angular_velocity>-2.0</min_angular_velocity>
+      <topic>cmd_vel</topic>
+      <odom_topic>odom</odom_topic>
+      <tf_topic>tf</tf_topic>
+      <odom_publish_frequency>50</odom_publish_frequency>
+    </plugin>
+
+    <!--
+      JointStatePublisher: publishes joint positions + velocities.
+      Needed by robot_state_publisher to know wheel angles for TF.
+    -->
+    <plugin filename="gz-sim-joint-state-publisher-system"
+            name="gz::sim::systems::JointStatePublisher">
+      <topic>joint_states</topic>
+    </plugin>
+
+  </model>
+</sdf>

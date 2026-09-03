@@ -1,0 +1,162 @@
+# ═══════════════════════════════════════════════════════════════
+# EKF configuration for robot_localization
+# Fuses: wheel odometry + IMU + GPS (via navsat_transform)
+#
+# The EKF tracks a 15-dimensional state:
+#   [x, y, z, roll, pitch, yaw,
+#    x_vel, y_vel, z_vel,
+#    roll_vel, pitch_vel, yaw_vel,
+#    x_accel, y_accel, z_accel]
+#
+# Each sensor input has a boolean matrix that says which of these
+# 15 values that sensor provides. True = "use this measurement
+# from this sensor." False = "ignore this value from this sensor."
+# ═══════════════════════════════════════════════════════════════
+
+/**:
+  ros__parameters:
+    # ── Coordinate frames ──
+    # map_frame: the fixed global frame (doesn't move)
+    # odom_frame: the odometry frame (drifts slowly over time)
+    # base_link_frame: the robot body frame (moves with the robot)
+    #
+    # The EKF publishes the transform: odom_frame → base_link_frame
+    # navsat_transform will handle map → odom (the GPS correction)
+    #
+    # NOTE: odom_frame/base_link_frame are "husky/"-prefixed, not the usual
+    # bare "odom"/"base_link". The world file includes this model with
+    # <name>husky</name> (overriding model.sdf's own "husky_leader"), and
+    # gz-sim-diff-drive-system has no <frame_id>/<child_frame_id> override
+    # in model.sdf, so it defaults to "<instance_name>/odom" and
+    # "<instance_name>/base_link" — confirmed via `ros2 topic echo /odom`.
+    # The EKF looks up a tf2 transform from each measurement's frame_id
+    # into these frames before fusing it; if these don't match reality,
+    # every measurement silently fails that lookup and the filter never
+    # initializes (never publishes /odometry/filtered).
+    map_frame: map
+    odom_frame: husky/odom
+    base_link_frame: husky/base_link
+    world_frame: husky/odom  # which frame the EKF operates in
+
+    # Use simulation time from /clock (bridged from Gazebo)
+    use_sim_time: true
+
+    # ros_gz_bridge publishes sensor topics as BEST_EFFORT. ekf_node's
+    # default subscriber QoS is RELIABLE, which is incompatible with a
+    # BEST_EFFORT publisher — the subscription silently receives nothing
+    # (no error). Override to match, or the EKF never gets input data.
+    qos_overrides:
+      /odom:
+        subscription:
+          reliability: best_effort
+      /imu/data:
+        subscription:
+          reliability: best_effort
+      /odometry/gps:
+        subscription:
+          reliability: best_effort
+
+    # How often the EKF publishes its estimate (Hz)
+    # 50 Hz matches our odom publish rate from DiffDrive
+    frequency: 50.0
+
+    # Publish the odom → base_link TF transform
+    # This is how rviz and other nodes know where the robot is
+    publish_tf: true
+
+    # Ground rover on flat terrain: no sensor here ever measures z position
+    # directly (odom0/odom1 both have z position = false), so z was being
+    # integrated purely from IMU z-acceleration — any tiny residual after
+    # gravity removal accumulates quadratically and free-falls the estimate
+    # (observed: z drifted to ~-55m, matching 0.5*g*t^2). two_d_mode pins
+    # z, roll, pitch and their velocities/accelerations to zero regardless
+    # of individual sensor configs — the standard robot_localization fix
+    # for ground vehicles.
+    two_d_mode: true
+
+    # Allow old measurements to be processed (important when sensors
+    # have different rates — GPS at 5 Hz might arrive "late" relative
+    # to 100 Hz IMU)
+    permit_corrected_publication: true
+
+    # ── Sensor 0: Wheel odometry ──
+    # Source: /odom from DiffDrive plugin (via ros_gz_bridge)
+    # Provides: x, y position and x velocity (forward speed)
+    #           yaw (heading from wheel rotation difference)
+    # Trust: good for short-term, drifts over time
+    odom0: /odom
+    odom0_config: [true,  true,  false,  # x, y, z position
+                   false, false, false,   # roll, pitch, yaw
+                   true,  false, false,   # x, y, z velocity
+                   false, false, true,    # roll, pitch, yaw velocity
+                   false, false, false]   # x, y, z acceleration
+
+    # Don't use the odom's pose directly for absolute position —
+    # it drifts. We use it mainly for velocity.
+    # But we DO use x, y pose as a relative constraint.
+    odom0_differential: false
+
+    # Queue size — how many messages to buffer
+    odom0_queue_size: 10
+
+    # ── Sensor 1: IMU ──
+    # Source: /imu/data from Gazebo IMU sensor
+    # Provides: orientation (roll, pitch, yaw), angular velocities,
+    #           linear acceleration
+    # Trust: excellent for orientation, angular rates; accel is noisy
+    imu0: /imu/data
+    imu0_config: [false, false, false,   # x, y, z position (IMU can't measure)
+                  true,  true,  true,    # roll, pitch, yaw (orientation)
+                  false, false, false,   # x, y, z velocity (IMU can't measure directly)
+                  true,  true,  true,    # roll, pitch, yaw velocity (gyroscope)
+                  true,  true,  true]    # x, y, z acceleration (accelerometer)
+
+    # Remove the gravity component from acceleration
+    # (accelerometer reads ~9.8 m/s² even when stationary due to gravity)
+    imu0_remove_gravitational_acceleration: true
+
+    imu0_queue_size: 10
+
+    # ── Sensor 2: GPS (converted to local frame by navsat_transform) ──
+    # Source: /odometry/gps from navsat_transform node
+    # Provides: absolute x, y position (in local frame, converted from lat/lon)
+    # Trust: noisy (±0.5m) but doesn't drift — corrects long-term odom drift
+    odom1: /odometry/gps
+    odom1_config: [true,  true,  false,  # x, y, z position
+                   false, false, false,   # roll, pitch, yaw
+                   false, false, false,   # x, y, z velocity
+                   false, false, false,   # roll, pitch, yaw velocity
+                   false, false, false]   # x, y, z acceleration
+
+    odom1_differential: false
+    odom1_queue_size: 10
+
+    # ── Process noise covariance ──
+    # How much the EKF trusts its own prediction vs sensor measurements.
+    # Larger values = "I don't trust my prediction much, lean on sensors."
+    # Smaller values = "My prediction is good, don't over-correct."
+    #
+    # These are diagonal values of the 15×15 process noise matrix.
+    # Order: x, y, z, roll, pitch, yaw,
+    #        x_vel, y_vel, z_vel,
+    #        roll_vel, pitch_vel, yaw_vel,
+    #        x_accel, y_accel, z_accel
+    #
+    # Start with these defaults. Tune if the robot oscillates or drifts.
+    process_noise_covariance: [
+      0.05,  0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,
+      0.0,   0.05,  0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,
+      0.0,   0.0,   0.06,  0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,
+      0.0,   0.0,   0.0,   0.03,  0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,
+      0.0,   0.0,   0.0,   0.0,   0.03,  0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,
+      0.0,   0.0,   0.0,   0.0,   0.0,   0.06,  0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,
+      0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.025, 0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,
+      0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.025, 0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,
+      0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.04,  0.0,   0.0,   0.0,   0.0,   0.0,   0.0,
+      0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.01,  0.0,   0.0,   0.0,   0.0,   0.0,
+      0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.01,  0.0,   0.0,   0.0,   0.0,
+      0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.02,  0.0,   0.0,   0.0,
+      0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.01,  0.0,   0.0,
+      0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.01,  0.0,
+      0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.015
+    ]
