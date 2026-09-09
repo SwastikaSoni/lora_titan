@@ -1,3 +1,6 @@
+import os
+from glob import glob
+
 from setuptools import find_packages, setup
 
 package_name = 'titan_navigation'
@@ -10,6 +13,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name, 'launch'), glob('launch/*.py')),
     ],
     package_data={'': ['py.typed']},
     install_requires=['setuptools'],
@@ -25,6 +29,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+             'fisvfh_node = titan_navigation.fisvfh_node:main',
         ],
     },
 )
