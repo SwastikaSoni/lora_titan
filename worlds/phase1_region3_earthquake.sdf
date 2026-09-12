@@ -1,0 +1,368 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <world name="phase1_region3_earthquake">
+
+    <!-- ══════════════════════════════════════════════════════════
+         SYSTEM PLUGINS
+         Same set as phase1_region2_*.sdf — see those files for the
+         "why" behind each one (identical here, not repeated).
+         ══════════════════════════════════════════════════════════ -->
+
+    <plugin filename="gz-sim-physics-system"
+            name="gz::sim::systems::Physics">
+    </plugin>
+
+    <plugin filename="gz-sim-user-commands-system"
+            name="gz::sim::systems::UserCommands">
+    </plugin>
+
+    <plugin filename="gz-sim-scene-broadcaster-system"
+            name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+
+    <plugin filename="gz-sim-sensors-system"
+            name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <plugin filename="gz-sim-imu-system"
+            name="gz::sim::systems::Imu">
+    </plugin>
+
+    <plugin filename="gz-sim-navsat-system"
+            name="gz::sim::systems::NavSat">
+    </plugin>
+
+    <plugin filename="gz-sim-contact-system"
+            name="gz::sim::systems::Contact">
+    </plugin>
+
+    <!-- ══════════════════════════════════════════════════════════
+         WORLD SETTINGS
+         Same GPS origin as phase1_region2_*.sdf (Detroit Mercy campus,
+         paper Table I) so fisvfh_nav.launch.py's default datum_lat/lon
+         and goal_lat/lon math still apply unchanged to this world.
+         ══════════════════════════════════════════════════════════ -->
+
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>5.5645e-6 2.28758e-5 -4.23884e-5</magnetic_field>
+
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <world_frame_orientation>ENU</world_frame_orientation>
+      <latitude_deg>42.4129540624</latitude_deg>
+      <longitude_deg>-83.1360653105</longitude_deg>
+      <elevation>190.0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+
+    <physics name="1ms" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SCENE — dimmer, dustier lighting than Region 2 (post-quake haze)
+         ══════════════════════════════════════════════════════════ -->
+    <scene>
+      <ambient>0.35 0.32 0.3 1</ambient>
+      <background>0.75 0.7 0.62 1</background>  <!-- dusty haze, not clear sky -->
+      <shadows>true</shadows>
+    </scene>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 100 0 0 0</pose>
+      <diffuse>0.7 0.68 0.6 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- ══════════════════════════════════════════════════════════
+         GROUND PLANE — same 200x200m pad as Region 2.
+         ══════════════════════════════════════════════════════════ -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>200 200</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>200 200</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.5 0.46 0.4 1</ambient>
+            <diffuse>0.5 0.46 0.4 1</diffuse>  <!-- cracked-earth tan, not grass -->
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ══════════════════════════════════════════════════════════
+         OBSTACLES — Region 3, post-earthquake debris field.
+         18 static obstacles across a ~70x30m area: 13 off to the left
+         or right of the direct path (rubble, fallen pillars, a
+         collapsed wall, a fallen slab), plus 5 "middle_*" obstacles
+         planted directly on the y=0 centerline between them, so the
+         robot actually has to detect and detour around something on
+         every leg instead of driving straight through empty space
+         down the middle.
+
+         Lesson carried over from Region 2's obstacle_box_6 (its rotated
+         footprint ended up only ~0.1m from the direct path, which
+         wasn't a deliberate tight squeeze — it just happened, and the
+         controller couldn't reliably handle it): the side obstacles
+         here all keep >=1.0m clearance from centerline (unchanged from
+         the first pass), and each middle_* obstacle sits alone in its
+         own x-band with nothing else nearby, so going around it is a
+         real but moderate detour (~1-1.5m swing) with open ground on
+         both sides — not a razor-thin gap between two obstacles.
+         ══════════════════════════════════════════════════════════ -->
+
+    <!-- Collapsed building rubble, right off the start -->
+    <model name="rubble_box_1">
+      <static>true</static>
+      <pose>6 2.5 0.5 0 0 0.2</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>2.2 1.4 1.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>2.2 1.4 1.0</size></box></geometry>
+          <material><ambient>0.5 0.42 0.35 1</ambient><diffuse>0.5 0.42 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Fallen pillar — cylinder rolled 90 deg so it lies on the ground -->
+    <model name="fallen_pillar_1">
+      <static>true</static>
+      <pose>11 -3 0.3 1.5708 0 0.3</pose>
+      <link name="link">
+        <collision name="c"><geometry><cylinder><radius>0.3</radius><length>3.0</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.3</radius><length>3.0</length></cylinder></geometry>
+          <material><ambient>0.4 0.38 0.35 1</ambient><diffuse>0.4 0.38 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Small debris block -->
+    <model name="rubble_box_2">
+      <static>true</static>
+      <pose>11 3.5 0.4 0 0 -0.3</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.0 1.0 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.0 1.0 0.8</size></box></geometry>
+          <material><ambient>0.55 0.5 0.45 1</ambient><diffuse>0.55 0.5 0.45 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Directly on the path — forces a real detour, not a shortcut -->
+    <model name="middle_1">
+      <static>true</static>
+      <pose>14 0.2 0.5 0 0 0.1</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.4 1.0 1.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.4 1.0 1.0</size></box></geometry>
+          <material><ambient>0.5 0.42 0.35 1</ambient><diffuse>0.5 0.42 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Collapsed wall segment — long and thin -->
+    <model name="collapsed_wall">
+      <static>true</static>
+      <pose>18 -2.5 0.6 0 0 0.15</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>4.0 0.6 1.2</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>4.0 0.6 1.2</size></box></geometry>
+          <material><ambient>0.6 0.58 0.55 1</ambient><diffuse>0.6 0.58 0.55 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Second fallen pillar, opposite side -->
+    <model name="fallen_pillar_2">
+      <static>true</static>
+      <pose>24 2.5 0.35 1.5708 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><cylinder><radius>0.35</radius><length>2.5</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.35</radius><length>2.5</length></cylinder></geometry>
+          <material><ambient>0.4 0.38 0.35 1</ambient><diffuse>0.4 0.38 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Directly on the path -->
+    <model name="middle_2">
+      <static>true</static>
+      <pose>27 -0.3 0.4 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><cylinder><radius>0.55</radius><length>1.8</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.55</radius><length>1.8</length></cylinder></geometry>
+          <material><ambient>0.4 0.38 0.35 1</ambient><diffuse>0.4 0.38 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Rubble cluster — two blocks close together, collapsed room -->
+    <model name="rubble_cluster_a">
+      <static>true</static>
+      <pose>30 -2 0.4 0 0 0.1</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.2 0.9 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.2 0.9 0.8</size></box></geometry>
+          <material><ambient>0.5 0.45 0.4 1</ambient><diffuse>0.5 0.45 0.4 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="rubble_cluster_b">
+      <static>true</static>
+      <pose>31.2 -3.2 0.4 0 0 -0.2</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.0 0.8 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.0 0.8 0.8</size></box></geometry>
+          <material><ambient>0.5 0.45 0.4 1</ambient><diffuse>0.5 0.45 0.4 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Directly on the path -->
+    <model name="middle_3">
+      <static>true</static>
+      <pose>34 0.3 0.45 0 0 -0.15</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.3 0.9 0.9</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.3 0.9 0.9</size></box></geometry>
+          <material><ambient>0.55 0.5 0.45 1</ambient><diffuse>0.55 0.5 0.45 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Fallen concrete slab -->
+    <model name="tilted_slab">
+      <static>true</static>
+      <pose>37 3 0.4 0 0 0.35</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>3.0 1.2 0.5</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>3.0 1.2 0.5</size></box></geometry>
+          <material><ambient>0.55 0.55 0.55 1</ambient><diffuse>0.55 0.55 0.55 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Third fallen pillar -->
+    <model name="fallen_pillar_3">
+      <static>true</static>
+      <pose>43 -3.5 0.3 1.5708 0 0.2</pose>
+      <link name="link">
+        <collision name="c"><geometry><cylinder><radius>0.3</radius><length>2.0</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.3</radius><length>2.0</length></cylinder></geometry>
+          <material><ambient>0.4 0.38 0.35 1</ambient><diffuse>0.4 0.38 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Directly on the path -->
+    <model name="middle_4">
+      <static>true</static>
+      <pose>45.5 0.0 0.4 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><cylinder><radius>0.55</radius><length>1.6</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.55</radius><length>1.6</length></cylinder></geometry>
+          <material><ambient>0.4 0.38 0.35 1</ambient><diffuse>0.4 0.38 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Rubble block -->
+    <model name="rubble_box_3">
+      <static>true</static>
+      <pose>48 2.5 0.45 0 0 -0.25</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.6 1.0 0.9</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.6 1.0 0.9</size></box></geometry>
+          <material><ambient>0.5 0.42 0.35 1</ambient><diffuse>0.5 0.42 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Scattered small debris -->
+    <model name="debris_small_1">
+      <static>true</static>
+      <pose>52 -2 0.3 0 0 0.4</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.8 0.8 0.6</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.8 0.8 0.6</size></box></geometry>
+          <material><ambient>0.55 0.5 0.45 1</ambient><diffuse>0.55 0.5 0.45 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Directly on the path -->
+    <model name="middle_5">
+      <static>true</static>
+      <pose>55.5 -0.2 0.5 0 0 0.2</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.5 1.1 1.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.5 1.1 1.0</size></box></geometry>
+          <material><ambient>0.5 0.42 0.35 1</ambient><diffuse>0.5 0.42 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Fourth fallen pillar, near the destination -->
+    <model name="fallen_pillar_4">
+      <static>true</static>
+      <pose>58 3 0.35 1.5708 0 -0.1</pose>
+      <link name="link">
+        <collision name="c"><geometry><cylinder><radius>0.35</radius><length>2.5</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.35</radius><length>2.5</length></cylinder></geometry>
+          <material><ambient>0.4 0.38 0.35 1</ambient><diffuse>0.4 0.38 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Final rubble pile before the destination -->
+    <model name="final_rubble">
+      <static>true</static>
+      <pose>63 -2.2 0.5 0 0 0.15</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.8 1.2 1.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.8 1.2 1.0</size></box></geometry>
+          <material><ambient>0.5 0.42 0.35 1</ambient><diffuse>0.5 0.42 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ROBOT
+         ══════════════════════════════════════════════════════════ -->
+    <include>
+      <uri>model://husky_leader</uri>
+      <name>husky</name>
+      <pose>0 0 0.3 0 0 0</pose>
+    </include>
+
+  </world>
+</sdf>

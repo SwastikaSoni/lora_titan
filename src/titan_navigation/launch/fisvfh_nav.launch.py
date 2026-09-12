@@ -10,6 +10,13 @@ Usage:
   ros2 launch titan_navigation fisvfh_nav.launch.py \
       goal_lat:=42.4130640624 goal_lon:=-83.1360653105
 
+  # Region 3 — post-earthquake debris field (18 obstacles, x=6..64 m).
+  # Default goal_lat/lon are tuned for Region 2's shorter obstacle
+  # field (last obstacle at x=55 m) and fall short here, so override
+  # goal_lon for a target past Region 3's last obstacle (x=64 m):
+  ros2 launch titan_navigation fisvfh_nav.launch.py \
+      world:=phase1_region3_earthquake goal_lon:=-83.1351517407
+
 Default goal is ~65 m due east of the world's GPS origin
 (42.4129540624, -83.1360653105) — past the obstacle field in
 phase1_region2_obstacles.sdf (obstacles span x=10..55 m) and equally
@@ -36,7 +43,11 @@ def generate_launch_description():
         "world",
         default_value="phase1_region2_open",
         description="World file name (without .sdf extension)",
-        choices=["phase1_region2_open", "phase1_region2_obstacles"],
+        choices=[
+            "phase1_region2_open",
+            "phase1_region2_obstacles",
+            "phase1_region3_earthquake",
+        ],
     )
     goal_lat_arg = DeclareLaunchArgument(
         "goal_lat",

@@ -44,6 +44,7 @@ def generate_launch_description():
         choices=[
             'phase1_region2_open',
             'phase1_region2_obstacles',
+            'phase1_region3_earthquake',
         ],
     )
 

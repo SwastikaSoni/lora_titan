@@ -278,6 +278,9 @@
           <friction>
             <ode><mu>1.0</mu><mu2>0.5</mu2></ode>
           </friction>
+          <contact>
+            <ode><kp>1e6</kp><kd>500</kd></ode>
+          </contact>
         </surface>
       </collision>
 
@@ -317,6 +320,9 @@
           <friction>
             <ode><mu>1.0</mu><mu2>0.5</mu2></ode>
           </friction>
+          <contact>
+            <ode><kp>1e6</kp><kd>500</kd></ode>
+          </contact>
         </surface>
       </collision>
 
@@ -356,6 +362,9 @@
           <friction>
             <ode><mu>1.0</mu><mu2>0.5</mu2></ode>
           </friction>
+          <contact>
+            <ode><kp>1e6</kp><kd>500</kd></ode>
+          </contact>
         </surface>
       </collision>
 
@@ -395,6 +404,9 @@
           <friction>
             <ode><mu>1.0</mu><mu2>0.5</mu2></ode>
           </friction>
+          <contact>
+            <ode><kp>1e6</kp><kd>500</kd></ode>
+          </contact>
         </surface>
       </collision>
 
