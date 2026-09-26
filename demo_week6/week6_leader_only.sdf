@@ -1,6 +1,15 @@
 <?xml version="1.0"?>
+<!--
+  week6_leader_only.sdf — DEMO ONLY, not part of the tracked worlds/.
+
+  Copy of ../worlds/phase1_region2_obstacles.sdf with the 4 follower
+  <include> blocks removed, so only the Husky leader spawns. Made for
+  a Week 6 (single-robot FISVFH) demo without the Week 7-8 fleet as
+  visual clutter. Safe to delete this whole demo_week6/ directory
+  after the demo — nothing else in the workspace references it.
+-->
 <sdf version="1.9">
-  <world name="phase1_region2_open">
+  <world name="week6_leader_only">
 
     <!-- ══════════════════════════════════════════════════════════
          SYSTEM PLUGINS
@@ -153,46 +162,143 @@
       </link>
     </model>
 
+
     <!-- ══════════════════════════════════════════════════════════
-         FLEET
-         1 Husky leader + 4 Jackal followers, lined up nose-to-tail
-         facing +x (the direction of travel toward the goal). 2.5 m
-         spacing is well clear of each robot's ~1 m footprint — plenty
-         of margin for settling on spawn, even before any follower
-         controller closes the gap down to the ~0.5 m following
-         distance (Task 4+). Each <include> name matches the topic
-         namespace baked into that model's plugins (see husky_leader
-         and follower_N model.sdf) and becomes the "<name>/base_link"
-         etc. TF prefix via DiffDrive's default frame_id.
+         OBSTACLES
+         10 static obstacles scattered across a ~60×40 m area.
+         Mix of boxes (buildings/rubble) and cylinders (pillars/trees).
+         Mimics distributed obstacles in Fig. 3 (§IV-A, Test Scenario 1).
+
+         Layout is roughly between the starting location (0,0) and a
+         destination ~60m away, so the platoon/navigator must weave through.
+         ══════════════════════════════════════════════════════════ -->
+
+    <!-- Large box — simulates collapsed wall or rubble pile -->
+    <model name="obstacle_box_1">
+      <static>true</static>
+      <pose>10 3 0.75 0 0 0.3</pose>  <!-- slightly rotated -->
+      <link name="link">
+        <collision name="c"><geometry><box><size>2.0 1.0 1.5</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>2.0 1.0 1.5</size></box></geometry>
+          <material><ambient>0.6 0.4 0.3 1</ambient><diffuse>0.6 0.4 0.3 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Cylinder — tree trunk or pillar -->
+    <model name="obstacle_cyl_1">
+      <static>true</static>
+      <pose>15 -5 1.0 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><cylinder><radius>0.4</radius><length>2.0</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.4</radius><length>2.0</length></cylinder></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Small box — debris -->
+    <model name="obstacle_box_2">
+      <static>true</static>
+      <pose>22 1 0.4 0 0 -0.2</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.2 0.8 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.2 0.8 0.8</size></box></geometry>
+          <material><ambient>0.5 0.5 0.5 1</ambient><diffuse>0.5 0.5 0.5 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Wide low box — forces the robot to go around, not over -->
+    <model name="obstacle_box_3">
+      <static>true</static>
+      <pose>28 -2 0.3 0 0 0.5</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>3.0 1.5 0.6</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>3.0 1.5 0.6</size></box></geometry>
+          <material><ambient>0.55 0.45 0.35 1</ambient><diffuse>0.55 0.45 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Cylinder — narrow but tall, easy to miss -->
+    <model name="obstacle_cyl_2">
+      <static>true</static>
+      <pose>33 4 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><cylinder><radius>0.25</radius><length>1.5</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.25</radius><length>1.5</length></cylinder></geometry>
+          <material><ambient>0.3 0.35 0.25 1</ambient><diffuse>0.3 0.35 0.25 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Two boxes forming a narrow gap — tests tight maneuvering -->
+    <model name="obstacle_box_4">
+      <static>true</static>
+      <pose>38 -1 0.5 0 0 0.1</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.5 1.0 1.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.5 1.0 1.0</size></box></geometry>
+          <material><ambient>0.5 0.4 0.35 1</ambient><diffuse>0.5 0.4 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="obstacle_box_5">
+      <static>true</static>
+      <pose>38 2.5 0.5 0 0 -0.1</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.5 1.0 1.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.5 1.0 1.0</size></box></geometry>
+          <material><ambient>0.5 0.4 0.35 1</ambient><diffuse>0.5 0.4 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Large cylinder — big tree -->
+    <model name="obstacle_cyl_3">
+      <static>true</static>
+      <pose>45 -4 1.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><cylinder><radius>0.6</radius><length>2.5</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.6</radius><length>2.5</length></cylinder></geometry>
+          <material><ambient>0.35 0.3 0.2 1</ambient><diffuse>0.35 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Box near the destination — last obstacle -->
+    <model name="obstacle_box_6">
+      <static>true</static>
+      <pose>52 1 0.5 0 0 0.4</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.8 1.2 1.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.8 1.2 1.0</size></box></geometry>
+          <material><ambient>0.45 0.45 0.4 1</ambient><diffuse>0.45 0.45 0.4 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Cylinder right before destination — forces a final turn -->
+    <model name="obstacle_cyl_4">
+      <static>true</static>
+      <pose>55 -1 1.0 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><cylinder><radius>0.5</radius><length>2.0</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.5</radius><length>2.0</length></cylinder></geometry>
+          <material><ambient>0.3 0.3 0.25 1</ambient><diffuse>0.3 0.3 0.25 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ══════════════════════════════════════════════════════════
+         LEADER ONLY — no followers, for the Week 6 single-robot demo.
          ══════════════════════════════════════════════════════════ -->
     <include>
       <uri>model://husky_leader</uri>
       <name>leader</name>
       <pose>0 0 0.3 0 0 0</pose>
-    </include>
-
-    <include>
-      <uri>model://follower_1</uri>
-      <name>follower_1</name>
-      <pose>-2.5 0 0.3 0 0 0</pose>
-    </include>
-
-    <include>
-      <uri>model://follower_2</uri>
-      <name>follower_2</name>
-      <pose>-5.0 0 0.3 0 0 0</pose>
-    </include>
-
-    <include>
-      <uri>model://follower_3</uri>
-      <name>follower_3</name>
-      <pose>-7.5 0 0.3 0 0 0</pose>
-    </include>
-
-    <include>
-      <uri>model://follower_4</uri>
-      <name>follower_4</name>
-      <pose>-10.0 0 0.3 0 0 0</pose>
     </include>
 
   </world>

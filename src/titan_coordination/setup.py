@@ -28,6 +28,10 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'platoon_leader = titan_coordination.platoon_leader:main',
+            'mesh_bridge_node = titan_coordination.mesh_bridge_node:main',
+            'bs_sink_node = titan_coordination.bs_sink_node:main',
+            'platoon_follower = titan_coordination.platoon_follower:main',
         ],
     },
 )

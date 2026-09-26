@@ -1,12 +1,19 @@
 """
 sim_bringup.launch.py
 
-Launches the full single-robot simulation stack:
-  1. Gazebo Ionic with a world file
-  2. ros_gz_bridge (Gazebo topics ↔ ROS 2 topics)
-  3. Static TF publishers (sensor frames)
-  4. robot_localization EKF (fuses odom + IMU + GPS)
-  5. navsat_transform (converts GPS lat/lon → local XY)
+Launches the full 5-robot fleet simulation stack:
+  1. Gazebo Ionic with a world file (1 Husky leader + 4 Jackal followers)
+  2. ros_gz_bridge (Gazebo topics <-> ROS 2 topics, all 5 robots)
+  3. Per-robot static TF publishers (sensor frames)
+  4. Per-robot robot_localization EKF (fuses odom + IMU + GPS)
+  5. Per-robot navsat_transform (converts GPS lat/lon -> local XY)
+
+Every robot gets its own namespace (/leader, /follower_1 .. /follower_4)
+matching the topic namespace baked into that robot's model.sdf plugins
+(see husky_leader/model.sdf and scripts/gen_follower_models.py — an
+explicit gz-sim plugin <topic> is used literally, not auto-scoped by
+instance name, so the namespace has to be baked into each model AND
+threaded through every ROS node below via `namespace=`).
 
 Usage:
   ros2 launch titan_coordination sim_bringup.launch.py
@@ -23,6 +30,147 @@ from launch.actions import (
 )
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
+
+
+# ── Fleet definition ──
+# name -> robot profile. Profile picks which sensor-mount offsets apply
+# (must match the corresponding model.sdf: husky_leader/model.sdf for
+# "husky", scripts/gen_follower_models.py's constants for "jackal").
+FLEET = [
+    ("leader", "husky"),
+    ("follower_1", "jackal"),
+    ("follower_2", "jackal"),
+    ("follower_3", "jackal"),
+    ("follower_4", "jackal"),
+]
+
+# (lidar_z, camera_x, camera_z) relative to base_link, per profile.
+SENSOR_OFFSETS = {
+    "husky": {"lidar_z": 0.20, "camera_x": 0.49, "camera_z": 0.15},
+    "jackal": {"lidar_z": 0.192, "camera_x": 0.214, "camera_z": 0.02},
+}
+
+
+def make_robot_nodes(name: str, profile: str, ekf_config, navsat_config):
+    """Static TFs + navsat_transform + EKF for one robot, all namespaced."""
+    off = SENSOR_OFFSETS[profile]
+
+    static_tf_lidar = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='static_tf_lidar',
+        namespace=name,
+        arguments=[
+            '--x', '0', '--y', '0', '--z', str(off['lidar_z']),
+            '--roll', '0', '--pitch', '0', '--yaw', '0',
+            '--frame-id', f'{name}/base_link',
+            '--child-frame-id', f'{name}/lidar_link/lidar_sensor',
+        ],
+        parameters=[{'use_sim_time': True}],
+    )
+
+    static_tf_camera = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='static_tf_camera',
+        namespace=name,
+        arguments=[
+            '--x', str(off['camera_x']), '--y', '0', '--z', str(off['camera_z']),
+            '--roll', '0', '--pitch', '0', '--yaw', '0',
+            '--frame-id', f'{name}/base_link',
+            '--child-frame-id', f'{name}/camera_link/camera_sensor',
+        ],
+        parameters=[{'use_sim_time': True}],
+    )
+
+    # child frame confirmed via `ros2 topic echo <ns>/imu/data --field
+    # header.frame_id` on two differently-named live instances — see
+    # scripts/gen_follower_models.py's docstring.
+    static_tf_imu = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='static_tf_imu',
+        namespace=name,
+        arguments=[
+            '--x', '0', '--y', '0', '--z', '0',
+            '--roll', '0', '--pitch', '0', '--yaw', '0',
+            '--frame-id', f'{name}/base_link',
+            '--child-frame-id', f'{name}/base_link/imu_sensor',
+        ],
+        parameters=[{'use_sim_time': True}],
+    )
+
+    # navsat_sensor lives on the same base_link element as imu_sensor, so
+    # it follows the identical "<ns>/base_link/<sensor_name>" pattern.
+    static_tf_gps = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='static_tf_gps',
+        namespace=name,
+        arguments=[
+            '--x', '0', '--y', '0', '--z', '0',
+            '--roll', '0', '--pitch', '0', '--yaw', '0',
+            '--frame-id', f'{name}/base_link',
+            '--child-frame-id', f'{name}/base_link/navsat_sensor',
+        ],
+        parameters=[{'use_sim_time': True}],
+    )
+
+    # navsat_transform: GPS lat/lon -> local XY. Must start before the EKF.
+    # All remap targets are RELATIVE — namespace=name prefixes them to
+    # /<name>/imu/data etc. Left column is navsat_transform_node's own
+    # internal default topic name (unrelated to our namespacing scheme).
+    start_navsat = Node(
+        package='robot_localization',
+        executable='navsat_transform_node',
+        name='navsat_transform',
+        namespace=name,
+        output='screen',
+        parameters=[
+            navsat_config,
+            {
+                'use_sim_time': True,
+                'base_link_frame_id': f'{name}/base_link',
+                'world_frame_id': f'{name}/odom',
+            },
+        ],
+        remappings=[
+            ('imu', 'imu/data'),
+            ('gps/fix', 'gps/fix'),
+            ('odometry/filtered', 'odometry/filtered'),
+            ('odometry/gps', 'odometry/gps'),
+            ('gps/filtered', 'gps/filtered'),
+        ],
+    )
+
+    # EKF: fuses wheel odom + IMU + GPS. Output: <name>/odometry/filtered —
+    # the one pose estimate everything downstream (FISVFH, follower
+    # controller, LoRa telemetry) reads for this robot.
+    start_ekf = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        namespace=name,
+        output='screen',
+        parameters=[
+            ekf_config,
+            {
+                'use_sim_time': True,
+                'odom_frame': f'{name}/odom',
+                'base_link_frame': f'{name}/base_link',
+                'world_frame': f'{name}/odom',
+            },
+        ],
+    )
+
+    return [
+        static_tf_lidar,
+        static_tf_camera,
+        static_tf_imu,
+        static_tf_gps,
+        start_navsat,
+        start_ekf,
+    ]
 
 
 def generate_launch_description():
@@ -45,6 +193,7 @@ def generate_launch_description():
             'phase1_region2_open',
             'phase1_region2_obstacles',
             'phase1_region3_earthquake',
+            'phase1_demo_compact',
         ],
     )
 
@@ -57,7 +206,7 @@ def generate_launch_description():
     # ── 1. Gazebo ──
     start_gazebo = ExecuteProcess(
         cmd=[
-            'gz', 'sim', '-r', '-v', '4',
+            'gz', 'sim', '-r', '-v', '1',
             PathJoinSubstitution([
                 worlds_dir,
                 [LaunchConfiguration('world'), '.sdf'],
@@ -67,6 +216,9 @@ def generate_launch_description():
     )
 
     # ── 2. ros_gz_bridge ──
+    # One shared bridge node — bridge.yaml already has all 5 robots'
+    # topics fully namespaced (e.g. "/leader/scan"), so no per-robot
+    # bridge namespace is needed here.
     start_bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
@@ -78,133 +230,16 @@ def generate_launch_description():
         }],
     )
 
-    # ── 3. Static TF publishers ──
-    # These tell the TF tree how sensor frames relate to the robot body.
-    # Every node that reads sensor data needs to know "where on the robot
-    # is this sensor?" — that's what TF provides.
-    #
-    # Parent is "husky/base_link", not bare "base_link": the world file
-    # includes this model as <name>husky</name>, and gz-sim-diff-drive-system
-    # (no <frame_id> override in model.sdf) publishes /odom with
-    # child_frame_id "husky/base_link" — confirmed via
-    # `ros2 topic echo /odom`. See the note in ekf.yaml.
-    #
-    # static_tf_imu's child frame is the IMU sensor's *actual* published
-    # frame_id ("husky/base_link/imu_sensor", confirmed via
-    # `ros2 topic echo /imu/data`), not an invented "imu_link" — the EKF
-    # (and navsat_transform) tf2-lookup each measurement's own frame_id,
-    # so it must match exactly or the measurement is silently dropped.
-
-    static_tf_lidar = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='static_tf_lidar',
-        arguments=[
-            '--x', '0', '--y', '0', '--z', '0.20',
-            '--roll', '0', '--pitch', '0', '--yaw', '0',
-            '--frame-id', 'husky/base_link',
-            '--child-frame-id', 'lidar_link',
-        ],
-        parameters=[{'use_sim_time': True}],
-    )
-
-    static_tf_camera = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='static_tf_camera',
-        arguments=[
-            '--x', '0.49', '--y', '0', '--z', '0.15',
-            '--roll', '0', '--pitch', '0', '--yaw', '0',
-            '--frame-id', 'husky/base_link',
-            '--child-frame-id', 'camera_link',
-        ],
-        parameters=[{'use_sim_time': True}],
-    )
-
-    static_tf_imu = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='static_tf_imu',
-        arguments=[
-            '--x', '0', '--y', '0', '--z', '0',
-            '--roll', '0', '--pitch', '0', '--yaw', '0',
-            '--frame-id', 'husky/base_link',
-            '--child-frame-id', 'husky/base_link/imu_sensor',
-        ],
-        parameters=[{'use_sim_time': True}],
-    )
-
-    static_tf_gps = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='static_tf_gps',
-        arguments=[
-            '--x', '0', '--y', '0', '--z', '0',
-            '--roll', '0', '--pitch', '0', '--yaw', '0',
-            '--frame-id', 'husky/base_link',
-            # navsat_sensor is on base_link with no <pose> override in the
-            # SDF, so its real published frame_id is
-            # "husky/base_link/navsat_sensor" (confirmed by
-            # navsat_transform's "Could not obtain ... transform" error
-            # naming this exact frame) — not an invented "gps_link".
-            '--child-frame-id', 'husky/base_link/navsat_sensor',
-        ],
-        parameters=[{'use_sim_time': True}],
-    )
-
-    # ── 4. navsat_transform ──
-    # Converts GPS lat/lon → local XY odometry.
-    # Must start BEFORE the EKF so the EKF has /odometry/gps to subscribe to.
-    # Inputs:  /gps/fix (NavSatFix), /imu/data (Imu), /odometry/filtered (Odom)
-    # Output:  /odometry/gps (Odometry in local frame)
-    start_navsat = Node(
-        package='robot_localization',
-        executable='navsat_transform_node',
-        name='navsat_transform',
-        output='screen',
-        parameters=[navsat_config],
-        remappings=[
-            # Map the generic topic names to our actual topic names
-            ('imu', '/imu/data'),            # IMU input
-            ('gps/fix', '/gps/fix'),         # GPS input
-            ('odometry/filtered', '/odometry/filtered'),  # from EKF
-            ('odometry/gps', '/odometry/gps'),            # output
-            ('gps/filtered', '/gps/filtered'),            # filtered GPS output
-        ],
-    )
-
-    # ── 5. EKF ──
-    # Fuses wheel odom + IMU + GPS (from navsat_transform).
-    # Input:  /odom, /imu/data, /odometry/gps
-    # Output: /odometry/filtered (the ONE pose estimate everything else uses)
-    #         Also publishes odom → base_link TF transform.
-    start_ekf = Node(
-        package='robot_localization',
-        executable='ekf_node',
-        name='ekf_filter_node',
-        output='screen',
-        parameters=[ekf_config],
-    )
+    # ── 3-5. Per-robot TF + navsat_transform + EKF ──
+    robot_nodes = []
+    for name, profile in FLEET:
+        robot_nodes.extend(make_robot_nodes(name, profile, ekf_config, navsat_config))
 
     # ── Build launch description ──
     return LaunchDescription([
-        # Arguments
         world_arg,
-
-        # Environment
         set_gz_resource_path,
-
-        # Gazebo + bridge
         start_gazebo,
         start_bridge,
-
-        # TF
-        static_tf_lidar,
-        static_tf_camera,
-        static_tf_imu,
-        static_tf_gps,
-
-        # Localization
-        start_navsat,
-        start_ekf,
+        *robot_nodes,
     ])

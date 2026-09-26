@@ -284,14 +284,40 @@
     </model>
 
     <!-- ══════════════════════════════════════════════════════════
-         ROBOT
-         Include the leader robot at a starting position.
-         The robot spawns 0.3m above ground so it drops and settles.
+         FLEET
+         1 Husky leader + 4 Jackal followers, lined up nose-to-tail
+         facing +x, behind the start point and clear of every obstacle
+         (closest obstacle is at x=10). See phase1_region2_open.sdf for
+         the spacing/namespacing rationale — identical here.
          ══════════════════════════════════════════════════════════ -->
     <include>
       <uri>model://husky_leader</uri>
-      <name>husky</name>
+      <name>leader</name>
       <pose>0 0 0.3 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://follower_1</uri>
+      <name>follower_1</name>
+      <pose>-2.5 0 0.3 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://follower_2</uri>
+      <name>follower_2</name>
+      <pose>-5.0 0 0.3 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://follower_3</uri>
+      <name>follower_3</name>
+      <pose>-7.5 0 0.3 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://follower_4</uri>
+      <name>follower_4</name>
+      <pose>-10.0 0 0.3 0 0 0</pose>
     </include>
 
   </world>

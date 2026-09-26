@@ -23,36 +23,51 @@
     # The EKF publishes the transform: odom_frame → base_link_frame
     # navsat_transform will handle map → odom (the GPS correction)
     #
-    # NOTE: odom_frame/base_link_frame are "husky/"-prefixed, not the usual
-    # bare "odom"/"base_link". The world file includes this model with
-    # <name>husky</name> (overriding model.sdf's own "husky_leader"), and
-    # gz-sim-diff-drive-system has no <frame_id>/<child_frame_id> override
-    # in model.sdf, so it defaults to "<instance_name>/odom" and
-    # "<instance_name>/base_link" — confirmed via `ros2 topic echo /odom`.
+    # NOTE: odom_frame/base_link_frame are "<robot>/"-prefixed, not the usual
+    # bare "odom"/"base_link" — gz-sim-diff-drive-system has no
+    # <frame_id>/<child_frame_id> override in any fleet model.sdf, so it
+    # defaults to "<instance_name>/odom" and "<instance_name>/base_link"
+    # (confirmed via `ros2 topic echo` on two differently-named instances —
+    # see scripts/gen_follower_models.py's docstring for the verification).
     # The EKF looks up a tf2 transform from each measurement's frame_id
     # into these frames before fusing it; if these don't match reality,
     # every measurement silently fails that lookup and the filter never
-    # initializes (never publishes /odometry/filtered).
+    # initializes (never publishes odometry/filtered).
+    #
+    # This file is shared by all 5 EKF instances (one per robot, each
+    # launched with namespace=<robot_name> — see sim_bringup.launch.py's
+    # per-robot loop). The 3 values below are placeholders overridden per
+    # robot by an inline parameter dict passed alongside this yaml; they
+    # only take effect if this file is ever loaded standalone.
     map_frame: map
-    odom_frame: husky/odom
-    base_link_frame: husky/base_link
-    world_frame: husky/odom  # which frame the EKF operates in
+    odom_frame: odom
+    base_link_frame: base_link
+    world_frame: odom  # which frame the EKF operates in
 
     # Use simulation time from /clock (bridged from Gazebo)
     use_sim_time: true
 
+    # Topic names below are RELATIVE (no leading slash) so the per-robot
+    # `namespace=` on this Node prefixes them to /<robot_name>/odom etc.
+    # An absolute "/odom" would make all 5 EKF instances subscribe to the
+    # same global topic — exactly the cross-robot collision Task 1 exists
+    # to catch.
+    #
     # ros_gz_bridge publishes sensor topics as BEST_EFFORT. ekf_node's
     # default subscriber QoS is RELIABLE, which is incompatible with a
     # BEST_EFFORT publisher — the subscription silently receives nothing
     # (no error). Override to match, or the EKF never gets input data.
+    # qos_overrides keys must match the topic string exactly as passed to
+    # create_subscription (i.e. the relative odom0/imu0/odom1 values below,
+    # pre-namespace-expansion) — not the fully-resolved /<robot>/... name.
     qos_overrides:
-      /odom:
+      odom:
         subscription:
           reliability: best_effort
-      /imu/data:
+      imu/data:
         subscription:
           reliability: best_effort
-      /odometry/gps:
+      odometry/gps:
         subscription:
           reliability: best_effort
 
@@ -84,7 +99,7 @@
     # Provides: x, y position and x velocity (forward speed)
     #           yaw (heading from wheel rotation difference)
     # Trust: good for short-term, drifts over time
-    odom0: /odom
+    odom0: odom
     odom0_config: [true,  true,  false,  # x, y, z position
                    false, false, false,   # roll, pitch, yaw
                    true,  false, false,   # x, y, z velocity
@@ -104,7 +119,7 @@
     # Provides: orientation (roll, pitch, yaw), angular velocities,
     #           linear acceleration
     # Trust: excellent for orientation, angular rates; accel is noisy
-    imu0: /imu/data
+    imu0: imu/data
     imu0_config: [false, false, false,   # x, y, z position (IMU can't measure)
                   true,  true,  true,    # roll, pitch, yaw (orientation)
                   false, false, false,   # x, y, z velocity (IMU can't measure directly)
@@ -121,7 +136,7 @@
     # Source: /odometry/gps from navsat_transform node
     # Provides: absolute x, y position (in local frame, converted from lat/lon)
     # Trust: noisy (±0.5m) but doesn't drift — corrects long-term odom drift
-    odom1: /odometry/gps
+    odom1: odometry/gps
     odom1_config: [true,  true,  false,  # x, y, z position
                    false, false, false,   # roll, pitch, yaw
                    false, false, false,   # x, y, z velocity

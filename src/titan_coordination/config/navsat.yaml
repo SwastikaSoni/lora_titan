@@ -18,14 +18,20 @@
   ros__parameters:
     use_sim_time: true
 
+    # This file is shared by all 5 navsat_transform instances (namespaced
+    # per robot in sim_bringup.launch.py's per-robot loop). All topic names
+    # below — both the remappings' targets and the qos_overrides keys — are
+    # RELATIVE so the per-robot `namespace=` prefixes them; an absolute
+    # "/imu/data" would make all 5 instances read the same global topic.
+    #
     # ros_gz_bridge publishes sensor topics as BEST_EFFORT; this node's
     # default subscriber QoS is RELIABLE. Override so the subscriptions
     # actually connect (see the same note in ekf.yaml).
     qos_overrides:
-      /imu/data:
+      imu/data:
         subscription:
           reliability: best_effort
-      /gps/fix:
+      gps/fix:
         subscription:
           reliability: best_effort
 
@@ -44,8 +50,19 @@
     # Gazebo Ionic IMU in ENU mode: yaw=0 = east. So offset = 0.
     yaw_offset: 0.0
 
-    # Wait for a valid datum (first GPS fix) before publishing.
-    wait_for_datum: false
+    # Wait for a valid datum before publishing, and use the DATUM below as
+    # the fixed origin — NOT each robot's own first GPS fix. Without this,
+    # every robot's navsat_transform picks its own noisy initial GPS reading
+    # as origin, so /leader/odometry/filtered and /follower_N/odometry/filtered
+    # end up in different reference frames offset by GPS noise. Chain-follower
+    # tracking then converges in each robot's local frame but the actual
+    # physical spacing is whatever the GPS noise makes it (observed: ~3 m
+    # apart in Gazebo even when controllers report dist=0.00). Sharing one
+    # world-origin datum aligns all 5 odom frames so relative positions match.
+    wait_for_datum: true
+    # World GPS origin from worlds/phase1_region2_open.sdf's <spherical_coordinates>
+    # (Detroit Mercy campus). [latitude_deg, longitude_deg, yaw_rad].
+    datum: [42.4129540624, -83.1360653105, 0.0]
 
     # Broadcast the utm → map TF transform.
     # This connects the global UTM frame to the local map frame.
@@ -53,12 +70,11 @@
     broadcast_utm_transform_as_parent_frame: true
 
     # ── Frame configuration ──
-    # Must match ekf.yaml — these default to plain "base_link"/"odom" if
-    # unset, which don't exist in this TF tree. The world file's model
-    # instance is named "husky" (see ekf.yaml's note), so wheel odom and
-    # the IMU publish under "husky/..." frames, not bare ones.
-    base_link_frame_id: husky/base_link
-    world_frame_id: husky/odom
+    # Must match ekf.yaml. Placeholders here — overridden per robot by an
+    # inline parameter dict in sim_bringup.launch.py's per-robot loop (see
+    # ekf.yaml's note on why these can't be one fixed value across 5 robots).
+    base_link_frame_id: base_link
+    world_frame_id: odom
     frequency: 5.0  # match GPS update rate
     delay: 0.0
 
